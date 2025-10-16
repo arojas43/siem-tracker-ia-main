@@ -1,0 +1,22 @@
+@use '../../mixins' as mixins;
+
+.suppliers-page__container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+
+    @include mixins.breakpoint(sm) {
+        padding: 0;
+    }
+}
+
+.suppliers-page__top {
+    // flex: 15%;
+}
+
+.suppliers-page__bottom {
+    overflow: auto;
+    // flex: 85%;
+}

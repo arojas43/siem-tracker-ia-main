@@ -1,0 +1,147 @@
+.client-phases-information__loading {
+    display: flex;
+    flex-direction: column;
+    // flex-direction: row;
+    gap: 60px;
+}
+.client-phases-information {
+    // background-color: red;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    // div {
+    // flex: 1; // Makes both divs take equal height
+    // display: flex;
+    // align-items: center; // Centers text vertically
+    // justify-content: center; // Centers text horizontally
+    // border: 1px solid white; // Optional: Just to visualize the sections
+    // }
+
+    &__map {
+        flex: 33%;
+        border-radius: 20px;
+        background-color: var(--siem-principal-gray);
+
+        display: flex;
+        justify-content: center;
+    }
+
+    &__info {
+        flex: 66%;
+        // background-color: green;
+        display: flex;
+        flex-direction: column;
+
+        &--text {
+            padding: 20px;
+            flex: 80%;
+            // background-color: blue;
+            display: flex;
+            flex-direction: column;
+            // div {
+            //     flex: 1;
+            // }
+
+            &-col {
+                padding-top: 20px;
+                // background-color: red;
+                h5 {
+                    font-weight: bold;
+                }
+                p {
+                    font-weight: 100;
+                }
+
+                .info {
+                    // background-color: green;
+                    display: flex;
+                    gap: 10px;
+
+                    p {
+                        margin-top: 20px;
+                    }
+                }
+            }
+        }
+
+        &--actions {
+            flex: 20%;
+            background-color: var(--siem-principal-gray-transparent);
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: nowrap;
+            padding: 8px 12px;
+            gap: 1rem;
+            font-size: clamp(0.6rem, 1vw + 0.2rem, 0.85rem);
+
+            @media (max-width: 600px) {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                font-size: 0.90rem;
+            
+                &-download-btn,
+                &-help-btn {
+                  align-items: center;
+                  justify-content: center;
+                  text-align: center;
+                  width: 100%;
+                  font-size: 0.90rem;
+                }
+              }
+
+            &-download-btn,
+            &-help-btn {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                white-space: nowrap;
+                font-weight: bold;
+                color: black;
+
+                svg {
+                    width: clamp(12px, 1vw + 2px, 16px);
+                    height: clamp(12px, 1vw + 2px, 16px);
+                }
+
+                a, p {
+                    margin: 0;
+                    font-weight: bold;
+                    color: black;
+                    font-size: inherit;
+                }
+            }
+
+            &-help-btn {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                text-align: right;
+
+                p {
+                    font-weight: 200;
+                    margin-top: 6px;
+                }
+
+                @media (max-width: 600px) {
+                    align-items: center;
+                    p {
+                        margin-top: 2px;
+                    }
+                }
+            }
+        
+
+    }
+}
+}
+
+.infoDash {
+  font-size: 0.75rem;
+  color: #333;
+  letter-spacing: 0rem;
+  display: inline-block;
+  font-family: 'Arial Black', Arial, sans-serif;
+}

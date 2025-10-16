@@ -1,0 +1,27 @@
+.operation-images {
+    /* background-color: red; */
+    height: 92%;
+    background-color: rgb(235, 235, 235);
+
+    overflow-y: auto;
+    /* height: 55vh; */
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    padding: 8px;
+    padding: 20px;
+
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--color-smx-gray);
+    border-radius: 20px;
+}
+
+.upload-photo-card__no-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}

@@ -1,0 +1,15 @@
+.new-operation-button,
+.new-operation-button:focus {
+    background-color: var(--siem-secondary-green);
+    border-color: var(--siem-secondary-green);
+}
+
+.new-operation-button:hover {
+    background-color: var(--siem-principal-light-blue);
+    border-color: var(--siem-principal-light-blue);
+}
+
+.new-operation-button:active {
+    background-color: var(--siem-secondary-blue) !important;
+    border-color: var(--siem-secondary-blue) !important;
+}

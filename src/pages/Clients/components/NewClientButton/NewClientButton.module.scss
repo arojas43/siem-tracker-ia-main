@@ -1,0 +1,15 @@
+.new-client-button,
+.new-client-button:focus {
+    background-color: var(--siem-secondary-green);
+    border-color: var(--siem-secondary-green);
+}
+
+.new-client-button:hover {
+    background-color: var(--siem-principal-light-blue);
+    border-color: var(--siem-principal-light-blue);
+}
+
+.new-client-button:active {
+    background-color: var(--siem-secondary-blue) !important;
+    border-color: var(--siem-secondary-blue) !important;
+}

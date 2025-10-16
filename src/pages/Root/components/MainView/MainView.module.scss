@@ -1,0 +1,21 @@
+@use '../../../../mixins' as mixins;
+
+.main-view__container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: 100vh;
+}
+
+.main-view__outlet-container {
+    min-height: 93vh;
+    padding-bottom: 76px; /* Espacio para el footer fijo */
+}
+
+.main-view__content-container {
+    margin-left: 300px;
+
+    @include mixins.breakpoint(sm) {
+        margin-left: 0px;
+    }
+}

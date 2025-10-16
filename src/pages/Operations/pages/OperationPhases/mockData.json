@@ -1,0 +1,106 @@
+[
+  {
+    "id": 10,
+    "phases": [
+      { "name": "Operación creada", "action": "N/A", "advisor": "María López", "status": "Finalizada" },
+      { "name": "Revalidación BL", "action": "Ir a la tarea", "advisor": "Carlos Pérez", "status": "En proceso" },
+      { "name": "Captura", "action": "Ir a la tarea", "advisor": "Ana Ruiz", "status": "En proceso" }
+    ]
+  },
+  {
+    "id": 11,
+    "phases": [
+      { "name": "Operación creada", "action": "N/A", "advisor": "María López", "status": "Finalizada" },
+      { "name": "Revalidación BL", "action": "Ir a la tarea", "advisor": "Carlos Pérez", "status": "En proceso" },
+      { "name": "Captura", "action": "Ir a la tarea", "advisor": "Ana Ruiz", "status": "En proceso" }
+    ]
+  },
+  {
+    "id": 12,
+    "phases": [
+      { "name": "Operación creada", "action": "N/A", "advisor": "María López", "status": "Finalizada" },
+      { "name": "Revalidación BL", "action": "Ir a la tarea", "advisor": "Carlos Pérez", "status": "En proceso" },
+      { "name": "Captura", "action": "Ir a la tarea", "advisor": "Ana Ruiz", "status": "En proceso" }
+    ]
+  },
+  {
+    "id": 13,
+    "phases": [
+      { "name": "Operación creada", "action": "N/A", "advisor": "María López", "status": "Finalizada" },
+      { "name": "Revalidación BL", "action": "Ir a la tarea", "advisor": "Carlos Pérez", "status": "En proceso" },
+      { "name": "Captura", "action": "Ir a la tarea", "advisor": "Ana Ruiz", "status": "En proceso" }
+    ]
+  },
+  {
+    "id": 14,
+    "phases": [
+      { "name": "Operación creada", "action": "N/A", "advisor": "María López", "status": "Finalizada" },
+      { "name": "Revalidación BL", "action": "Ir a la tarea", "advisor": "Carlos Pérez", "status": "En proceso" },
+      { "name": "Captura", "action": "Ir a la tarea", "advisor": "Ana Ruiz", "status": "En proceso" }
+    ]
+  },
+  {
+    "id": 15,
+    "phases": [
+      { "name": "Operación creada", "action": "N/A", "advisor": "María López", "status": "Finalizada" },
+      { "name": "Revalidación BL", "action": "Ir a la tarea", "advisor": "Carlos Pérez", "status": "En proceso" },
+      { "name": "Captura", "action": "Ir a la tarea", "advisor": "Ana Ruiz", "status": "En proceso" }
+    ]
+  },
+  {
+    "id": 16,
+    "phases": [
+      { "name": "Operación creada", "action": "N/A", "advisor": "María López", "status": "Finalizada" },
+      { "name": "Revalidación BL", "action": "Ir a la tarea", "advisor": "Carlos Pérez", "status": "En proceso" },
+      { "name": "Captura", "action": "Ir a la tarea", "advisor": "Ana Ruiz", "status": "En proceso" }
+    ]
+  },
+  {
+    "id": 17,
+    "phases": [
+      { "name": "Operación creada", "action": "N/A", "advisor": "María López", "status": "Finalizada" },
+      { "name": "Revalidación BL", "action": "Ir a la tarea", "advisor": "Carlos Pérez", "status": "En proceso" },
+      { "name": "Captura", "action": "Ir a la tarea", "advisor": "Ana Ruiz", "status": "En proceso" }
+    ]
+  },
+  {
+    "id": 18,
+    "phases": [
+      { "name": "Operación creada", "action": "N/A", "advisor": "María López", "status": "Finalizada" },
+      { "name": "Revalidación BL", "action": "Ir a la tarea", "advisor": "Carlos Pérez", "status": "En proceso" },
+      { "name": "Captura", "action": "Ir a la tarea", "advisor": "Ana Ruiz", "status": "En proceso" }
+    ]
+  },
+  {
+    "id": 19,
+    "phases": [
+      { "name": "Operación creada", "action": "N/A", "advisor": "María López", "status": "Finalizada" },
+      { "name": "Revalidación BL", "action": "Ir a la tarea", "advisor": "Carlos Pérez", "status": "En proceso" },
+      { "name": "Captura", "action": "Ir a la tarea", "advisor": "Ana Ruiz", "status": "En proceso" }
+    ]
+  },
+  {
+    "id": 20,
+    "phases": [
+      { "name": "Operación creada", "action": "N/A", "advisor": "María López", "status": "Finalizada" },
+      { "name": "Revalidación BL", "action": "Ir a la tarea", "advisor": "Carlos Pérez", "status": "En proceso" },
+      { "name": "Captura", "action": "Ir a la tarea", "advisor": "Ana Ruiz", "status": "En proceso" }
+    ]
+  },
+  {
+    "id": 21,
+    "phases": [
+      { "name": "Operación creada", "action": "N/A", "advisor": "María López", "status": "Finalizada" },
+      { "name": "Revalidación BL", "action": "Ir a la tarea", "advisor": "Carlos Pérez", "status": "En proceso" },
+      { "name": "Captura", "action": "Ir a la tarea", "advisor": "Ana Ruiz", "status": "En proceso" }
+    ]
+  },
+  {
+    "id": 22,
+    "phases": [
+      { "name": "Operación creada", "action": "N/A", "advisor": "María López", "status": "Finalizada" },
+      { "name": "Revalidación BL", "action": "Ir a la tarea", "advisor": "Carlos Pérez", "status": "En proceso" },
+      { "name": "Captura", "action": "Ir a la tarea", "advisor": "Ana Ruiz", "status": "En proceso" }
+    ]
+  }
+]

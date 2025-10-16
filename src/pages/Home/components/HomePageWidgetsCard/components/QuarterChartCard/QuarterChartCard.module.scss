@@ -1,0 +1,233 @@
+@use '../../../../../../mixins' as mixins;
+
+.quarter-chart-card {
+    background-color: rgb(238, 245, 252);
+    width: 100%;
+    border-color: rgb(238, 245, 252);
+    border-radius: 20px;
+    padding: 20px;
+
+    @include mixins.breakpoint(sm) {
+        display: none;
+    }
+}
+
+.quarter-chart-card__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
+
+.quarter-chart-card__body--total {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.quarter-chart-card__body--nom {
+    display: flex;
+    flex-direction: row;
+}
+
+.quarter-chart-card__body--nom > div {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+.quarter-chart-card__body--nom > div > hr {
+    width: 100%;
+    height: 7px;
+    background-color: #000;
+    margin: 20px 0;
+    border-radius: 50px;
+}
+
+.quarter-chart-card__body--nom > div > div > p,
+.quarter-chart-card__body--nom > div > strong {
+    margin: 0 !important;
+}
+
+.quarter-chart-card_chart-mobile {
+    flex-direction: column;
+    max-width: 100%;
+    background-color: rgb(238, 245, 252);
+    border-color: rgb(238, 245, 252);
+    border-radius: 20px;
+    padding: 20px;
+    flex-wrap: nowrap;
+    align-content: space-between;
+    justify-content: space-around;
+    gap: 30px;
+    display: none;
+    // flex-direction: row;
+    // flex-flow: row-reverse;
+
+    .quarter-chart-card_title_mobile {
+        padding-top: 12px;
+        width: 52%;
+        font-weight: bold;
+    }
+
+    .quarter-chart-card__body_mobile {
+        width: 45%;
+        padding: 0;
+    }
+
+    .quarter-chart-card__body--total_mobile {
+        width: 45%;
+
+        .chart {
+            --percentage: calc(var(--progress) * 1%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(#009b8f var(--percentage), #009b8f40 var(--percentage));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+
+            &::before {
+                content: '';
+                width: 80px;
+                height: 80px;
+                background: rgb(238, 245, 252);
+                border-radius: 50%;
+                position: absolute;
+            }
+
+            span {
+                position: absolute;
+            }
+        }
+    }
+
+    @include mixins.breakpoint(sm) {
+        display: flex;
+    }
+}
+
+.quarter-chart-card_period-mobile {
+    display: none;
+    max-width: 100%;
+    background-color: #fff;
+    border-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 10px;
+
+    .quarter-chart-card__body_mobile {
+        padding: 10px 20px;
+    }
+
+    @include mixins.breakpoint(sm) {
+        display: flex;
+    }
+}
+
+.data-block {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    align-items: flex-end;
+
+    & > div {
+        flex: 1; /* Makes all child divs take equal width */
+        text-align: center; /* Centers content inside */
+
+        h5 {
+            font-size: 1.2rem;
+        }
+    }
+}
+
+.custom-progress {
+    background-color: var(--siem-principal-gray);
+    :global(.progress-bar) {
+        background-color: var(--siem-principal-light-blue) !important; // Change the progress bar to yellow
+    }
+}
+
+.semaphore {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    gap: 0;
+}
+
+.semaphore-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+}
+
+.semaphore-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 1px solid gray;
+    flex-shrink: 0;
+}
+
+.semaphore-label {
+    margin: 0;
+    margin-left: 6px;
+    font-size: 14px;
+    color: #222;
+}
+
+.semaphore-help {
+    display: inline-block;
+    margin-left: 4px;
+    cursor: pointer;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+    line-height: 12px;
+    font-size: 10px;
+    user-select: none;
+    border: 1px solid #bbb;
+    transition: background 0.2s;
+}
+
+.semaphore-help:hover {
+    background: #d0d0d0;
+}
+
+.semaphore-tooltip {
+    position: absolute;
+    top: 200%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: #fff;
+    color: #222;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    margin-top: 4px;
+    min-width: 220px;
+    font-size: 13px;
+    font-weight: 400;
+    white-space: pre-line;
+}
+
+.semaphore-count {
+    font-size: 14px;
+    margin-top: 6px;
+    color: #222;
+    font-weight: 600;
+}

@@ -1,0 +1,200 @@
+@use '../../../../../../mixins' as mixins;
+
+.new-operation-form {
+    background-color: rgb(239, 239, 239);
+    border-color: rgb(239, 239, 239);
+    height: 100%;
+    /* padding: 30px; */
+}
+
+.operation-form {
+    background-color: transparent;
+    border-color: transparent;
+
+    /* height: 100%; */
+    /* padding: 30px; */
+    .operation-form__row {
+        margin-bottom: 30px;
+        padding: 10px;
+        border: 2px solid rgb(239, 239, 239);
+        border-radius: 8px;
+
+        h6 {
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .operation-form__column {
+            margin-right: 50px;
+
+            @include mixins.breakpoint(sm) {
+                margin-right: 0px;
+                flex: 100%;
+            }
+        }
+
+        .operation-form__row_col {
+            margin-right: 50px;
+
+            @include mixins.breakpoint(sm) {
+                margin-right: 0px;
+                flex: 100%;
+            }
+        }
+    }
+}
+
+.new-operation-form__header {
+    /* background-color: yellow; */
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.new-operation-form__form-group {
+    height: 45px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+
+    @include mixins.breakpoint(sm) {
+        flex-wrap: wrap;
+        height: auto;
+    }
+}
+
+.new-operation-form__ta-form-group {
+    height: 100px;
+    display: flex;
+    // align-items: center;
+    margin-bottom: 20px;
+
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+
+    @include mixins.breakpoint(sm) {
+        flex-wrap: wrap;
+        height: auto;
+    }
+}
+
+.new-operation-form__form-group label,
+.new-operation-form__ta-form-group label {
+    flex: 0 0 50%;
+    margin-right: 5px;
+    font-size: 18px;
+
+    @include mixins.breakpoint(sm) {
+        flex: 0 0 100%;
+    }
+}
+
+.new-operation-form__form-group textarea {
+    margin-top: 50px;
+    @include mixins.breakpoint(sm) {
+        flex: 0 0 100%;
+    }
+}
+
+.new-operation-form__form-group input,
+.new-operation-form__form-group textarea,
+.new-operation-form__form-group select {
+    flex: 0 0 50%;
+
+    @include mixins.breakpoint(sm) {
+        flex: 0 0 100%;
+    }
+}
+
+.new-operation-form__submit-button {
+    width: 400px;
+}
+
+.operation-form__loading-overlay {
+    position: absolute;
+    /* top: 0; */
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* z-index: 2; */
+}
+
+.form-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background: rgba(255, 255, 255, 0.7); */
+    background: rgba(0, 0, 0, 0.6);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.form-overlay .loader {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #007bff; /* Primary color for spinning effect */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.new-operation-form__form-input-w-message {
+    flex: 0 0 50%;
+
+    @include mixins.breakpoint(sm) {
+        flex: 0 0 100%;
+    }
+}
+
+.new-operation-form__form-input-w-message__invalid {
+    margin-top: 15px;
+    flex: 0 0 50%;
+
+    @include mixins.breakpoint(sm) {
+        flex: 0 0 100%;
+    }
+}
+
+.operation-form__hr {
+    margin-bottom: 40px;
+    color: var(--siem-principal-blue);
+}
+
+.operation-form__error-message {
+    color: var(--siem-secondary-red);
+}
+
+.input-group__text {
+    background-color: rgb(233, 236, 239);
+    border-left-color: rgb(233, 236, 239);
+    z-index: 0;
+}
+
+.readOnly {
+    background-color: rgb(230, 233, 237);
+}

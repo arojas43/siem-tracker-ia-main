@@ -1,0 +1,25 @@
+.upload-file-card__dropdown-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-file-card__table {
+    margin-top: 20px;
+    // background-color: red;
+}
+
+.upload-file-card__table thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.upload-file-card__table th {
+    background-color: var(--main-bg-color);
+}
+
+.upload-file-card__table th,
+td {
+    text-align: center;
+}

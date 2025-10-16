@@ -1,0 +1,21 @@
+.one_date_checkbox_onYes_comments__form {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.one_date_checkbox_onYes_comments__footer {
+    display: flex;
+    justify-content: end;
+}
+
+.one_date_checkbox_onYes_comments__button {
+    width: 300px;
+    padding: 5px !important;
+}
+
+.one_date_checkbox_onYes_comments__checkbox {
+    display: flex;
+    justify-content: space-between;
+}

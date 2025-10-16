@@ -1,0 +1,20 @@
+.operation-info {
+    /* background-color: red; */
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px 0px 20px;
+    margin-bottom: 20px;
+}
+
+.operation-info__container {
+    background-color: white;
+    border: 1px solid var(--siem-secondary-green);
+    border-top: 1px solid white !important;
+
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
+
+    & > div {
+        overflow: auto;
+        min-height: 350px;
+    }
+}

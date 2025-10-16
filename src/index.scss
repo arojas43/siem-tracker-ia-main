@@ -1,0 +1,101 @@
+@use 'react-pdf/dist/Page/TextLayer.css' as *;
+@use 'react-pdf/dist/Page/AnnotationLayer.css' as *;
+@use 'bootstrap/dist/css/bootstrap.min.css' as *;
+@use './_variables.scss' as *;
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;700&display=swap');
+
+body {
+    /* margin: 0;
+    height: 100vh; */
+    font-family: 'Raleway', Arial, sans-serif;
+    background: linear-gradient(to top, #52a4b2 -30%, white 50%, transparent) !important;
+}
+
+.siem-delete-icon-button {
+    color: var(--siem-secondary-red);
+}
+
+.siem-primary-button {
+    background-color: var(--siem-secondary-green);
+    border-color: var(--siem-secondary-green);
+}
+
+.siem-primary-button:active {
+    background-color: var(--siem-secondary-green) !important;
+    border-color: var(--siem-secondary-green) !important;
+}
+
+.siem-primary-button:hover {
+    background-color: var(--siem-principal-light-blue);
+    border-color: var(--siem-principal-light-blue);
+}
+
+.siem-primary-button:disabled {
+    background-color: var(--siem-principal-light-blue);
+    border-color: var(--siem-principal-light-blue);
+}
+
+.tracker-action-icon-btn {
+    color: black;
+}
+
+.tracker-page-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    margin-bottom: 70px;
+    min-height: 75vh;
+}
+
+.tracker-page-container__card {
+    background-color: white;
+    margin: 20px 20px 0px 20px;
+    border-radius: 25px 25px 0 0;
+    padding-bottom: 0;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 60px 40px 40px 40px;
+}
+
+/* OPERATION TABS CSS*/
+.operation-page__container {
+    /* background-color: red; */
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    padding: 20px;
+
+    /* height: 100%; */
+    height: 85vh;
+
+    margin-top: 25px;
+}
+
+.download_button {
+    display: flex;
+    gap: 10px;
+    color: black;
+}
+
+table {
+    th {
+        text-align: center;
+    }
+}
+
+.siem-save-button {
+    color: var(--siem-secondary-green);
+    border-color: var(--siem-secondary-green);
+}
+
+.siem-save-button:disabled {
+    color: var(--color-smx-gray);
+    border-color: var(--color-smx-gray);
+}
+
+.siem-save-button:hover {
+    color: white;
+    background-color: var(--siem-secondary-green);
+
+    border-color: var(--siem-secondary-green);
+}

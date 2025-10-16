@@ -1,0 +1,205 @@
+// ChatbotWidget.module.scss
+@import '../../../../_variables.scss';
+
+.chatbot-widget-card {
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  height: 100%;
+  
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+}
+
+.widget-card-header {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border-bottom: none;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 12px 12px 0 0;
+}
+
+.widget-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.expand-button {
+  color: white;
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+  
+  &:focus {
+    box-shadow: none;
+    color: white;
+  }
+}
+
+.widget-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100% - 60px);
+}
+
+.widget-description {
+  margin-bottom: 20px;
+  
+  p {
+    margin-bottom: 12px;
+    color: #6c757d;
+    font-size: 14px;
+    line-height: 1.5;
+    
+    &:first-child {
+      color: #495057;
+      font-weight: 500;
+    }
+  }
+}
+
+.widget-features {
+  font-size: 13px;
+  color: #6c757d;
+  line-height: 1.6;
+}
+
+.chat-button {
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+  }
+}
+
+// Expanded widget styles
+.chatbot-widget-expanded {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 600px;
+  height: 70vh;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.widget-header {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.widget-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.widget-controls {
+  button {
+    color: white;
+    padding: 4px 8px;
+    border: none;
+    background: transparent;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+.widget-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .chatbot-widget-expanded {
+    width: 95%;
+    height: 80vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .widget-card-body {
+    padding: 16px;
+  }
+  
+  .widget-description {
+    margin-bottom: 16px;
+    
+    p {
+      font-size: 13px;
+    }
+  }
+  
+  .widget-features {
+    font-size: 12px;
+  }
+}
+
+// Animation for smooth transitions
+.chatbot-widget-expanded {
+  animation: expandWidget 0.3s ease-out;
+}
+
+@keyframes expandWidget {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+// Backdrop for expanded widget
+.chatbot-widget-expanded::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}

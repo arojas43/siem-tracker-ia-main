@@ -1,0 +1,18 @@
+.user-profile-offcanvas {
+    display: flex;
+    flex-direction: column;
+    // background-color: red;
+    padding: 20px;
+
+    &__body {
+        // background-color: yellow;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+
+        .user-image {
+            border: 2px solid var(--siem-principal-light-blue);
+        }
+    }
+}

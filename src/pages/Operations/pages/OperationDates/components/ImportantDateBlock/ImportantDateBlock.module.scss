@@ -1,0 +1,35 @@
+.important-dates-block {
+    display: block;
+    border-radius: 12px;
+    border: 1px solid var(--color-smx-gray);
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional */
+
+    h5 {
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #ccc;
+    }
+    .important-dates-table {
+        width: 100%;
+        table-layout: fixed;
+
+        th:nth-child(1),
+        td:nth-child(1),
+        th:nth-child(2),
+        td:nth-child(2) {
+            width: 40%;
+            text-align: left;
+        }
+
+        th:nth-child(3),
+        td:nth-child(3) {
+            width: 20%;
+            text-align: left;
+        }
+
+        .highlight td {
+            background-color: #fff3cd;
+        }
+    }
+}

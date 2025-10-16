@@ -1,0 +1,108 @@
+.enable-phase-task-modal {
+    &__body {
+        height: 500px;
+        overflow: auto;
+
+        &-switch {
+            padding: 18px 20px;
+            margin: 12px 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+
+            background: #ffffff; // switch
+            border: 1px solid #eef2f1;
+            border-radius: 14px;
+            box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+
+            transition:
+                background-color 120ms ease,
+                box-shadow 120ms ease;
+            &:hover {
+                background: #fcfdfc;
+                box-shadow: 0 2px 6px rgba(16, 24, 40, 0.06);
+            }
+
+            p {
+                flex: 1 1 auto;
+                margin: 0;
+                font-size: 18px;
+                line-height: 1.35;
+                color: #0f172a;
+            }
+        }
+
+        .bigSwitch {
+            :global(.form-check-input) {
+                width: 56px;
+                height: 32px;
+                cursor: pointer;
+
+                background-color: #e9fbf6;
+                border: 1px solid #c6efe4;
+                border-radius: 9999px;
+                background-position: left center;
+                background-size: 28px 28px;
+
+                transition:
+                    background-color 120ms ease,
+                    border-color 120ms ease;
+
+                &:focus {
+                    box-shadow: 0 0 0 0.15rem rgba(16, 185, 129, 0.25);
+                    border-color: #a7e7d8;
+                }
+
+                &:checked {
+                    background-color: var(--siem-secondary-green);
+                    border-color: var(--siem-secondary-green);
+                    background-position: right center;
+                }
+            }
+
+            :global(.form-check-label) {
+                font-size: 1.2rem;
+                margin-left: 0;
+            }
+        }
+    }
+
+    &__footer {
+        display: flex;
+        margin-top: 10px;
+        padding: 5px;
+        justify-content: end;
+        height: 50px;
+        border-radius: 8px;
+    }
+}
+
+.eye {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    cursor: pointer;
+    user-select: none;
+    transition:
+        color 120ms ease,
+        transform 120ms ease;
+
+    svg {
+        stroke-width: 2.5; /* make the lines thicker */
+        filter: drop-shadow(0 0 0 currentColor) drop-shadow(0 0 0 currentColor); /* fake stroke bolding */
+    }
+
+    &:hover {
+        transform: scale(1.05);
+    }
+}
+
+.eye--on {
+    color: var(--siem-secondary-green);
+}
+.eye--off {
+    color: #9ca3af;
+}

@@ -1,0 +1,127 @@
+@use '../../../../mixins' as mixins;
+
+.operation-table {
+    height: 69vh;
+    overflow-y: auto;
+
+    padding: 20px;
+    border-color: rgb(238, 238, 238);
+
+    th {
+        text-align: center;
+    }
+
+    @include mixins.breakpoint(sm) {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.operation-table_filters {
+    @include mixins.breakpoint(sm) {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start !important;
+
+        & > div {
+            flex-direction: column;
+            width: 100%;
+            align-items: flex-start !important;
+
+            & > div {
+                width: 100%;
+                margin-bottom: 10px;
+
+                button {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+.operation-table_container {
+    @include mixins.breakpoint(sm) {
+        width: 100%;
+        overflow-y: auto;
+
+        table {
+            min-width: 1220px;
+        }
+    }
+}
+
+.operation-table__input--group {
+    /* width: 50%;
+    height: 50px; */
+    background-color: var(--siem-principal-gray-transparent);
+    border-radius: 15px;
+}
+
+.operation-table__input--icon {
+    background-color: transparent;
+    border-color: transparent;
+
+    border-left-color: transparent;
+}
+
+.operation-table__input {
+    background-color: transparent;
+    border-color: transparent;
+
+    border-left-color: transparent;
+
+    font-size: 15px;
+}
+
+.operation-table__dropdown {
+    height: 32px;
+    width: 200px;
+    font-size: 15px;
+
+    background-color: var(--siem-principal-gray-transparent);
+    border-color: var(--siem-principal-gray-transparent);
+
+    color: black;
+}
+
+.operation-table__dropdown:hover {
+    background-color: var(--siem-principal-gray);
+    border-color: var(--siem-principal-gray);
+
+    color: black;
+}
+
+.operation-table__dropdown:focus {
+    background-color: var(--siem-principal-gray);
+    border-color: var(--siem-principal-gray);
+
+    color: black;
+}
+
+.tempo {
+    table-layout: fixed;
+}
+
+.tempo th:last-child,
+.tempo td:last-child {
+    width: 8%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Divide the rest of the space among the first 5 columns */
+.tempo th:not(:last-child),
+.tempo td:not(:last-child) {
+    width: 18%;
+}
+
+.advisor-column {
+    width: 8% !important;
+    // background-color: red !important;
+}
+
+.status-column {
+    width: 12% !important;
+    // background-color: green !important;
+}

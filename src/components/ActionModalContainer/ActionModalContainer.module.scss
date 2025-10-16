@@ -1,0 +1,31 @@
+.action-modal-container {
+    background-color: var(--siem-action-gray);
+}
+
+.action-modal-container__dialog {
+    max-width: 1000px;
+}
+
+.action-modal-container__header {
+    border-bottom-color: transparent !important;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    &--title {
+        color: var(--siem-secondary-green);
+        padding: 10px 0 0 5px;
+    }
+}
+
+.action-modal-container__close-button {
+    opacity: 1;
+    border-radius: 50%;
+    font-size: 7px;
+    padding: 7px !important;
+    text-decoration: none;
+    /* we need to use #00a99d invert color to get expected results */
+    background-color: #ff5662 !important;
+
+    filter: invert(1);
+}

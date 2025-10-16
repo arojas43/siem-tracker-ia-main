@@ -1,0 +1,404 @@
+// FloatingChatButton.module.scss
+@import '../../_variables.scss';
+
+.floating-chat-trigger {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.trigger-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  }
+  
+  &:active {
+    transform: translateY(0) scale(0.95);
+  }
+  
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.floating-chat-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 380px;
+  height: 500px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease-out;
+}
+
+.chat-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    .header-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+    
+    h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.chat-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  
+  // Forzar ancho completo en el contenedor
+  width: 100% !important;
+  max-width: 100% !important;
+  
+  // Personalización adicional para Deep Chat
+  :global(.deep-chat) {
+    height: 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    
+    // Sobrescribir estilos internos de Deep Chat
+    &[style*="width"] {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+    
+    // Sobrescribir específicamente el ancho fijo de 320px
+    &[style*="320px"] {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+    
+    // Forzar ancho completo en todos los elementos internos
+    * {
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    
+    .deep-chat-messages {
+      background: #f8f9fa !important;
+      flex: 1 !important;
+      overflow-y: auto !important;
+      max-height: calc(500px - 120px) !important; // Altura total menos header y input
+      padding: 10px !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      
+      // Scrollbar personalizada
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+        
+        &:hover {
+          background: #a8a8a8;
+        }
+      }
+      
+      // Estilos para mensajes del asistente
+      .deep-chat-message-assistant {
+        max-width: 100% !important;
+        width: 100% !important;
+        
+        .deep-chat-message-bubble {
+          max-width: 100% !important;
+          width: 100% !important;
+          word-wrap: break-word !important;
+          white-space: pre-wrap !important;
+          
+          // Forzar ancho completo en todos los elementos internos
+          * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+          
+          // Renderizar <br> tags correctamente
+          br {
+            display: block !important;
+            content: "" !important;
+            margin-top: 0.5em !important;
+          }
+          
+          // Estilos para tablas (igual que ChatbotAgent)
+          .table-responsive {
+            width: 100% !important;
+            overflow-x: auto !important;
+            margin: 8px 0 !important;
+          }
+          
+          table {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-bottom: 0 !important;
+            border-collapse: collapse !important;
+            font-size: 0.9rem !important;
+            
+            th, td {
+              padding: 0.75rem 1rem !important;
+              text-align: left !important;
+              border: 1px solid #e9ecef !important;
+              line-height: 1.4 !important;
+              word-wrap: break-word !important;
+              overflow-wrap: break-word !important;
+              white-space: normal !important;
+            }
+            
+            th {
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+              color: white !important;
+              font-weight: 700 !important;
+              font-size: 0.85rem !important;
+              text-transform: uppercase !important;
+              letter-spacing: 0.5px !important;
+              text-align: center !important;
+              position: sticky !important;
+              top: 0 !important;
+              z-index: 10 !important;
+            }
+            
+            td {
+              vertical-align: top !important;
+              background-color: white !important;
+              color: #333 !important;
+              font-size: 0.9rem !important;
+              
+              &.table-cell-content {
+                word-wrap: break-word !important;
+                white-space: pre-wrap !important;
+                max-width: 200px !important;
+                line-height: 1.5 !important;
+                font-weight: 400 !important;
+              }
+            }
+            
+            tbody tr:nth-child(even) {
+              background-color: #f8f9fa !important;
+              td { 
+                background-color: #f8f9fa !important; 
+              }
+            }
+            
+            tbody tr:nth-child(odd) {
+              background-color: white !important;
+              td { 
+                background-color: white !important; 
+              }
+            }
+            
+            tbody tr:hover {
+              background-color: #e3f2fd !important;
+              td { 
+                background-color: #e3f2fd !important; 
+              }
+            }
+          }
+          
+          // Estilos para listas
+          ul, ol {
+            margin: 8px 0 !important;
+            padding-left: 20px !important;
+            
+            li {
+              margin: 4px 0 !important;
+              word-wrap: break-word !important;
+            }
+          }
+          
+          // Estilos para párrafos
+          p {
+            margin: 8px 0 !important;
+            word-wrap: break-word !important;
+            white-space: pre-wrap !important;
+          }
+          
+          // Estilos para contenido HTML
+          div {
+            width: 100% !important;
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+          
+          // Estilos específicos para contenedores de mensajes de Deep Chat
+          .outer-message-container,
+          .message-bubble,
+          .ai-message,
+          .html-message {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+          
+          // Forzar ancho completo en el contenedor de mensajes
+          #messages {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          
+          // Estilos para títulos
+          h1, h2, h3, h4, h5, h6 {
+            margin: 12px 0 8px 0 !important;
+            color: #333 !important;
+            font-weight: bold !important;
+          }
+          
+          h3 {
+            color: #667eea !important;
+            border-bottom: 2px solid #e9ecef !important;
+            padding-bottom: 4px !important;
+          }
+          
+          // Estilos para texto en negrita
+          strong, b {
+            font-weight: bold !important;
+            color: #333 !important;
+          }
+          
+          // Estilos para texto en cursiva
+          em, i {
+            font-style: italic !important;
+          }
+        }
+      }
+      
+      // Estilos para mensajes del usuario
+      .deep-chat-message-user {
+        .deep-chat-message-bubble {
+          max-width: 80% !important;
+          word-wrap: break-word !important;
+        }
+      }
+    }
+    
+    .deep-chat-text-input {
+      border-top: 1px solid #e9ecef !important;
+      background: white !important;
+      flex-shrink: 0 !important;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .floating-chat-container {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+    height: 400px;
+  }
+  
+  .floating-chat-trigger {
+    bottom: 10px;
+    right: 10px;
+  }
+}
+
+// Animaciones
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Estilos globales para sobrescribir Deep Chat
+:global {
+  .floating-chat-container deep-chat {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  
+  .floating-chat-container deep-chat[style*="width"] {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .floating-chat-container deep-chat[style*="320px"] {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}

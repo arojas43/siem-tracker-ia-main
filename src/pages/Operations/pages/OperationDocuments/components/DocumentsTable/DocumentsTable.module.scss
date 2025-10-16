@@ -1,0 +1,39 @@
+.documents-table__container {
+    /* background-color: blue; */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    table {
+        th {
+            text-align: center;
+        }
+    }
+}
+
+.operation-table__input--group {
+    width: 35%;
+    min-width: 200px;
+    margin-left: auto;
+    background-color: var(--siem-principal-gray-transparent);
+    border-radius: 15px;
+}
+
+.operation-table__input--icon {
+    background-color: transparent;
+    border-color: transparent;
+
+    /* font-size: 15px; */
+    /* border-right-color: var(--siem-principal-gray-transparent); */
+    border-left-color: transparent;
+}
+
+.operation-table__input {
+    background-color: transparent;
+    border-color: transparent;
+
+    /* border-left-color: var(--siem-principal-gray-transparent); */
+    border-left-color: transparent;
+
+    font-size: 15px;
+}

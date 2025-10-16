@@ -1,0 +1,48 @@
+@use '../../../../mixins' as mixins;
+
+.custom-widget-card {
+    height: 100%;
+    border: none;
+}
+.custom-widget-card__body {
+    padding: 15px;
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    flex-direction: row;
+
+    @include mixins.breakpoint(sm) {
+        padding: 0;
+    }
+}
+
+.custom-widget-card__w1 {
+    flex: 2;
+    display: flex;
+
+    @include mixins.breakpoint(sm) {
+        flex: auto;
+    }
+}
+
+.custom-widget-card__w1--b {
+    flex: 75%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.custom-widget-card__w3 {
+    flex: 1;
+    align-self: center;
+    text-align: right;
+
+    @include mixins.breakpoint(sm) {
+        flex: auto;
+
+        button {
+            width: 100% !important;
+        }
+    }
+}

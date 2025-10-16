@@ -1,0 +1,31 @@
+@use '../../mixins' as mixins;
+
+.login__container {
+    /* background-color: red; */
+
+    display: flex;
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Ensure it takes at least the full height of the viewport */
+    flex-direction: column; /* Align items vertically (in case you want stacked elements) */
+}
+
+.login__container-logo {
+    width: 350px;
+    max-width: 90%;
+    margin: 50px 10px;
+
+    @include mixins.breakpoint('sm') {
+        margin: 50px 10px;
+        max-width: 70%;
+    }
+
+    @include mixins.breakpoint('md') {
+        margin: 30px 10px;
+        max-width: 70%;
+    }
+
+    @include mixins.breakpoint-landscape('lg') {
+        margin: 30px 10px;
+        max-width: 60%;
+    }
+}

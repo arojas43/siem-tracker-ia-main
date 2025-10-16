@@ -1,0 +1,60 @@
+@use '../../../../mixins' as mixins;
+
+.task-table {
+    overflow-y: auto;
+    padding: 20px;
+    border: none;
+
+    th {
+        text-align: center;
+    }
+
+    tr {
+        td {
+            width: 10%;
+
+            &:nth-child(2) {
+                max-width: 35%;
+                width: 35%;
+                word-break: break-word;
+            }
+        }
+    }
+
+    @include mixins.breakpoint(sm) {
+        padding: 0;
+
+        table {
+            min-width: 650px;
+        }
+    }
+}
+
+.task-table-action-button {
+    cursor: pointer;
+    width: 17px;
+    height: 17px;
+    margin: 5px;
+}
+
+.nowrap-cell {
+    white-space: nowrap;
+}
+
+.view-operation-button,
+.view-operation-button:focus {
+    background-color: var(--siem-secondary-green);
+    border-color: var(--siem-secondary-green);
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.view-operation-button:hover {
+    background-color: var(--siem-principal-light-blue);
+    border-color: var(--siem-principal-light-blue);
+}
+
+.view-operation-button:active {
+    background-color: var(--siem-secondary-blue) !important;
+    border-color: var(--siem-secondary-blue) !important;
+}

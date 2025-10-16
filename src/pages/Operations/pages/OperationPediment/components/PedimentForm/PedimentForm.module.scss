@@ -1,0 +1,16 @@
+.three-field-action-modal__form {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.three-field-action-modal__footer {
+    display: flex;
+    justify-content: end;
+}
+
+.three-field-action-modal__button {
+    width: 300px;
+    padding: 5px !important;
+}

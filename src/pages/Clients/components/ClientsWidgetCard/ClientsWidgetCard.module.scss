@@ -1,0 +1,51 @@
+@use '../../../../mixins' as mixins;
+
+.client-widget-card {
+    height: 100%;
+    border: none;
+    /* border-color: rgb(238, 238, 238); */
+    /* border-radius: 20px; */
+    /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); */
+}
+.client-widget-card__body {
+    padding: 15px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+
+    @include mixins.breakpoint(sm) {
+        padding: 0;
+    }
+}
+
+.client-widget-card__w1 {
+    flex: 2;
+    display: flex;
+
+    @include mixins.breakpoint(sm) {
+        flex: auto;
+    }
+}
+
+.client-widget-card__w1--b {
+    flex: 75%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.client-widget-card__w3 {
+    flex: 1;
+    align-self: center;
+    text-align: right;
+
+    @include mixins.breakpoint(sm) {
+        flex: auto;
+
+        button {
+            width: 100% !important;
+        }
+    }
+}

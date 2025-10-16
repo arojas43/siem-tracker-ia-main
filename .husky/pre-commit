@@ -1,0 +1,8 @@
+# cd app
+
+# check branch name is correct
+# checks if eslint and format is correct
+# npx validate-branch-name && npx lint-staged
+
+tsc && npx lint-staged
+# npm run test:no-watch

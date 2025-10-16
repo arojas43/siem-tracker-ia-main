@@ -1,0 +1,45 @@
+@use '../../../../mixins' as mixins;
+
+.client-table {
+    overflow-y: auto;
+    padding: 20px;
+    border: none;
+
+    th {
+        text-align: center;
+    }
+
+    tr {
+        td {
+            width: 20%;
+
+            &:nth-child(1),
+            &:nth-child(2) {
+                max-width: 35%;
+                width: 35%;
+                word-break: break-word;
+            }
+        }
+    }
+
+    @include mixins.breakpoint(sm) {
+        padding: 0;
+
+        table {
+            min-width: 650px;
+        }
+    }
+}
+
+.client-table-action-button {
+    cursor: pointer;
+    width: 17px;
+    height: 17px;
+    margin: 5px;
+}
+
+.client-table-logo {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #f3f3f3;
+}

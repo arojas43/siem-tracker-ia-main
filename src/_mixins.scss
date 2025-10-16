@@ -1,0 +1,47 @@
+// Definir un mixin para media queries
+@mixin media-breakpoint-up($breakpoint) {
+    @if $breakpoint == xs {
+      @media (min-width: 0px) { @content; }
+    } @else if $breakpoint == sm {
+      @media (min-width: 576px) { @content; }
+    } @else if $breakpoint == md {
+      @media (min-width: 768px) { @content; }
+    } @else if $breakpoint == lg {
+      @media (min-width: 992px) { @content; }
+    } @else if $breakpoint == xl {
+      @media (min-width: 1200px) { @content; }
+    } @else if $breakpoint == xxl {
+      @media (min-width: 1400px) { @content; }
+    }
+}
+  
+// Mixin para usar breakpoints en max-width
+@mixin breakpoint($breakpoint) {
+    @if $breakpoint == xs {
+        @media (max-width: 576px) { @content; }
+    } @else if $breakpoint == sm {
+        @media (max-width: 768px) { @content; }
+    } @else if $breakpoint == md {
+        @media (max-width: 992px) { @content; }
+    } @else if $breakpoint == lg {
+        @media (max-width: 1200px) { @content; }
+    } @else if $breakpoint == xl {
+        @media (max-width: 1400px) { @content; }
+    } @else if $breakpoint == xxl {
+        // No hay un tamaño superior a XXL, pero puedes definirlo manualmente si lo necesitas
+    }
+}
+
+@mixin breakpoint-landscape($breakpoint) {
+  @if $breakpoint == xs {
+      @media (max-width: 576px) and (orientation: landscape) { @content; }
+  } @else if $breakpoint == sm {
+      @media (max-width: 768px) and (orientation: landscape) { @content; }
+  } @else if $breakpoint == md {
+      @media (max-width: 992px) and (orientation: landscape) { @content; }
+  } @else if $breakpoint == lg {
+      @media (max-width: 1200px) and (orientation: landscape) { @content; }
+  } @else if $breakpoint == xl {
+      @media (max-width: 1400px) and (orientation: landscape) { @content; }
+  }
+}

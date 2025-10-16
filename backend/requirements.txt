@@ -1,0 +1,42 @@
+# Dependencias para el backend del chatbot de SIEM
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.6.4
+python-multipart==0.0.6
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.0
+
+# LangChain y OpenAI
+langchain==0.1.0
+langchain-openai==0.0.2
+langchain-community==0.0.10
+openai==1.6.1
+
+# Memoria y persistencia
+
+# HTTP requests
+requests==2.31.0
+httpx==0.27.0
+
+# Logging y monitoreo
+structlog==23.2.0
+
+# Base de datos (opcional para persistencia)
+sqlalchemy==2.0.23
+alembic==1.13.0
+
+# Redis para cache (opcional)
+redis==5.0.1
+
+# Validación de datos
+email-validator==2.1.0
+
+# Utilidades
+python-dateutil==2.8.2
+pytz==2023.3
+
+# RAG y Vector Store
+chromadb==0.5.3
+sentence-transformers==2.6.1
+pypdf==3.17.4

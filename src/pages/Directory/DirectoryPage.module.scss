@@ -1,0 +1,87 @@
+.directory-page {
+  min-height: 80vh;
+}
+
+.directory-page__container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.directory-page__bottom {
+  overflow: auto;
+}
+
+// Widget Card (header)
+.directory-widget-card {
+  height: 100%;
+  border: none;
+  background: transparent;
+}
+.directory-widget-card__body {
+  padding: 15px;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.directory-widget-card__w1 {
+  flex: 2;
+  display: flex;
+}
+.directory-widget-card__w1--b {
+  flex: 75%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+// Table Card (buscador + tarjetas)
+.directory-table-card {
+  overflow-y: auto;
+  padding: 10px 20px 20px 20px;
+  border: none;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.directory-table-card #input {
+  margin-top: 0;
+  margin-bottom: 18px;
+  padding-bottom: 0;
+  justify-content: flex-end;
+}
+
+.directory-table-card .w-50 {
+  width: 100% !important;
+  max-width: 420px;
+}
+@media (max-width: 1024px) {
+  .directory-page__container {
+    padding: 0;
+  }
+  .directory-table-card {
+    padding: 0;
+  }
+}
+
+
+.directory-page__container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.directory-page__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.directory-page__bottom {
+  width: 100%;
+}

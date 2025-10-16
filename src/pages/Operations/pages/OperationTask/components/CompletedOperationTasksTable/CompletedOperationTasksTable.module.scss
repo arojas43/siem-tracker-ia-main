@@ -1,0 +1,47 @@
+.operation-task-table__actions {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.operation-task-table__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.operation-task-table__header-btn {
+    display: flex;
+    gap: 10px;
+    color: black;
+}
+
+.operation-task-table__checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.operation-task-table__checkbox:checked {
+    background-color: var(--siem-secondary-green);
+    border-color: var(--siem-secondary-green);
+}
+
+.operation-task-table__checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}

@@ -1,0 +1,31 @@
+.search-bar {
+    padding-bottom: 20px;
+
+    &__input--group {
+        background-color: var(--siem-principal-gray-transparent);
+        border-radius: 15px;
+    }
+
+    // Styles for the Input element (Form.Control)
+    &__input {
+        background-color: transparent;
+        border-color: transparent;
+        font-size: 15px;
+
+        &:focus {
+            box-shadow: none;
+            background-color: transparent;
+            border-color: transparent;
+        }
+    }
+
+    // Styles for the InputGroup.Text that contains an icon
+    &__input--icon {
+        background-color: transparent !important;
+        border: none !important;
+    }
+
+    &__icon--clickable {
+        cursor: pointer;
+    }
+}

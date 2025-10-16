@@ -1,0 +1,169 @@
+@use '../../../../../../mixins' as mixins;
+
+:root {
+    --finished-operations-color: rgb(196, 175, 51);
+    --pending-operations-color: rgb(237, 231, 188);
+}
+
+.pie-chart-card {
+    background-color: rgb(238, 245, 252);
+    width: 100%;
+    border-color: rgb(238, 245, 252);
+    border-radius: 20px;
+    padding: 20px;
+
+    @include mixins.breakpoint(sm) {
+        display: none;
+    }
+}
+
+.pie-chart-card__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
+
+.pie-chart-card__body--total {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pie-chart-card__body--nom {
+    display: flex;
+    flex-direction: row;
+}
+
+.pie-chart-card__body--nom > div {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+.pie-chart-card__body--nom > div > hr {
+    width: 100%;
+    height: 7px;
+    background-color: #000;
+    margin: 20px 0;
+    border-radius: 50px;
+}
+
+.pie-chart-card__body--nom > div > div > p,
+.pie-chart-card__body--nom > div > strong {
+    margin: 0 !important;
+}
+
+.pie-chart-card_chart-mobile {
+    flex-direction: column;
+    max-width: 100%;
+    background-color: rgb(238, 245, 252);
+    border-color: rgb(238, 245, 252);
+    border-radius: 20px;
+    padding: 20px;
+    flex-wrap: nowrap;
+    align-content: space-between;
+    justify-content: space-around;
+    gap: 30px;
+    display: none;
+    // flex-direction: row;
+    // flex-flow: row-reverse;
+
+    .pie-chart-card_title_mobile {
+        padding-top: 12px;
+        width: 52%;
+        font-weight: bold;
+    }
+
+    .pie-chart-card__body_mobile {
+        width: 45%;
+        padding: 0;
+    }
+
+    .pie-chart-card__body--total_mobile {
+        width: 45%;
+
+        .chart {
+            --percentage: calc(var(--progress) * 1%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--finished-operations-color) var(--percentage),
+                var(--pending-operations-color) var(--percentage)
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+
+            &::before {
+                content: '';
+                width: 80px;
+                height: 80px;
+                background: rgb(238, 245, 252);
+                border-radius: 50%;
+                position: absolute;
+            }
+
+            span {
+                position: absolute;
+            }
+        }
+    }
+
+    @include mixins.breakpoint(sm) {
+        display: flex;
+    }
+}
+
+.pie-chart-card_period-mobile {
+    display: none;
+    max-width: 100%;
+    background-color: #fff;
+    border-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 10px;
+
+    .pie-chart-card__body_mobile {
+        padding: 10px 20px;
+    }
+
+    @include mixins.breakpoint(sm) {
+        display: flex;
+    }
+}
+
+.data-block {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    align-items: flex-end;
+
+    & > div {
+        flex: 1; /* Makes all child divs take equal width */
+        text-align: center; /* Centers content inside */
+
+        h5 {
+            font-size: 1.2rem;
+        }
+    }
+}
+
+.custom-progress {
+    background-color: var(--pending-operations-color) !important;
+    :global(.progress-bar) {
+        background-color: var(--finished-operations-color) !important;
+    }
+}
+
+.semaphore {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

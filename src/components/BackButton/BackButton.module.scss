@@ -1,0 +1,33 @@
+.back-button {
+    align-self: flex-start;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: var(--color-secondary);
+    display: flex;
+    gap: 7px;
+    justify-content: flex-start;
+    align-items: center;
+    width: auto;
+    padding: 5px 10px;
+}
+
+.back-button:hover {
+    color: var(--siem-principal-blue);
+}
+
+.icon-back-button {
+    opacity: 1;
+    border-radius: 50%;
+    font-size: 10px;
+    padding: 12px !important;
+    text-decoration: none;
+    /* we need to use #00a99d invert color to get expected results */
+    background-color: #ff5662 !important;
+
+    filter: invert(1);
+}
+
+.icon-back-button:hover {
+    border-color: var(--siem-secondary-green);
+    opacity: 0.5;
+}

@@ -1,0 +1,35 @@
+.paginationWrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.paginationWrapper :global(.page-item .page-link) {
+    color: #444;
+    border: none;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.paginationWrapper :global(.page-item .page-link:hover) {
+    background-color: #f0f0f0;
+    color: #000;
+}
+
+/* Active item */
+.paginationWrapper :global(.page-item.active .page-link) {
+    background-color: var(--siem-principal-light-blue);
+    color: #fff;
+    font-weight: bold;
+    border-radius: 0.25rem;
+}
+
+/* Disabled state */
+.paginationWrapper :global(.page-item.disabled .page-link),
+.paginationWrapper :global(.page-item .page-link[aria-disabled='true']) {
+    color: #aaa;
+    background-color: #f8f9fa;
+    pointer-events: none;
+    cursor: not-allowed;
+}

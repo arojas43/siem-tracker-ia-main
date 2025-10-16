@@ -1,0 +1,34 @@
+.toaster__container {
+    width: 100%;
+    display: flex;
+    position: fixed;
+    justify-content: right;
+    padding: 20px;
+    z-index: 1000000000000000;
+}
+
+.toaster {
+    background-color: white;
+    border-color: lightgray;
+}
+
+.toaster__body {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    align-items: center;
+}
+
+.toaster__body > p {
+    margin: 0px;
+}
+
+.toaster__error-icon {
+    color: var(--siem-secondary-red);
+}
+
+.toaster__success-icon {
+    color: var(--siem-secondary-green);
+}

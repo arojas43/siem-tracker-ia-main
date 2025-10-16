@@ -1,0 +1,23 @@
+# Configuración del WhatsApp Bot de SIEM
+
+# Puerto del servidor
+PORT=3001
+
+# Configuración de SIEM
+SIEM_API_URL=http://localhost:8000
+SIEM_API_TOKEN=siem-chatbot-token-2024
+
+# OpenAI (opcional, se usa desde SIEM)
+OPENAI_API_KEY=sk-your-openai-api-key-here
+
+# Configuración del bot
+NODE_ENV=development
+LOG_LEVEL=info
+
+# Configuración de WhatsApp
+WHATSAPP_SESSION_ID=siem-whatsapp-session
+WHATSAPP_HEADLESS=true
+WHATSAPP_MULTI_DEVICE=true
+
+# Configuración de archivos temporales
+TEMP_MEDIA_PATH=./temp_media/

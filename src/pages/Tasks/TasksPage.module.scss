@@ -1,0 +1,22 @@
+@use '../../mixins' as mixins;
+
+.tasks-page__container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+
+    @include mixins.breakpoint(sm) {
+        padding: 0;
+    }
+}
+
+.tasks-page__top {
+    // flex: 15%;
+}
+
+.tasks-page__bottom {
+    overflow: auto;
+    // flex: 85%;
+}

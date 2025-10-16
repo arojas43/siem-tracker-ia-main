@@ -1,0 +1,93 @@
+@use '../../../../mixins' as mixins;
+
+.operation-phases-page {
+    /* background-color: red; */
+    background-color: white;
+    margin: 20px 20px 0px 20px;
+    border-radius: 25px 25px 0 0;
+    padding-bottom: 0;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.operation-phases-page__header {
+    display: flex;
+
+    /* background-color: yellow; */
+    height: 5vh;
+
+    justify-content: space-between;
+    align-items: center;
+}
+
+.operation-phases-page__header--buttons {
+    /* background-color: purple; */
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.operation-phases-page__table {
+    padding-top: 10px;
+    /* background-color: green; */
+    height: 100%;
+    overflow: auto;
+
+    @include mixins.breakpoint(sm) {
+        thead tr {
+            th:nth-child(3),
+            th:nth-child(2) {
+                display: none;
+            }
+        }
+
+        tbody tr {
+            td:nth-child(3),
+            td:nth-child(2) {
+                display: none;
+            }
+        }
+    }
+}
+
+.avatar-container {
+    position: relative;
+    // background-color: red !important;
+}
+.avatar {
+    width: 35px;
+    height: 35px;
+    margin-left: 50px;
+
+    object-fit: fill;
+    border: 1px solid var(--color-secondary);
+    position: absolute;
+}
+
+.operation-table {
+    table-layout: fixed;
+}
+
+// .status-column {
+//     padding-left: 50px !important;
+//     padding-right: 50px !important;
+// }
+
+.operation-table th:not(:last-child),
+.operation-table td:not(:last-child) {
+    width: 18%;
+}
+
+.operation-table th:last-child,
+.operation-table td:last-child {
+    width: 10%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.status-column {
+    padding-left: 50px !important;
+    padding-right: 50px !important;
+}
+
+.advisor-column {
+    width: 10% !important;
+}

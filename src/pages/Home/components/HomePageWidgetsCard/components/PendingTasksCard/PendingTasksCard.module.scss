@@ -1,0 +1,42 @@
+@use '../../../../../../mixins' as mixins;
+
+.pending-tasks-card {
+    background-color: rgb(237, 231, 188);
+    width: 100%;
+    border-color: rgb(237, 231, 188);
+    border-radius: 20px;
+    padding: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+
+    @include mixins.breakpoint(sm) {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
+.pending-tasks-card__body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+}
+
+.pending-tasks-card__list {
+    height: 20vh;
+    overflow: auto;
+}
+
+.pending-tasks-card__list > ul {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+}
+
+.pending-tasks-card__list > ul > li {
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 30px;
+    padding-right: 30px;
+}

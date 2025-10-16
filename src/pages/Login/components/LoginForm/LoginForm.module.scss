@@ -1,0 +1,115 @@
+@use "../../../../_variables.scss" as *;
+@use "../../../../mixins" as mixins;
+
+.login-form__container {
+    background-color: var(--siem-principal-gray-transparent);
+    width: 600px;
+    max-width: 90%;
+    padding: 50px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+
+    @include mixins.breakpoint('sm') {
+        padding: 30px 20px;
+    }
+}
+
+.login-form__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-form__form--input {
+    /* padding: 40px !important; */
+    border-color: var(--siem-principal-blue);
+    background-color: var(--siem-principal-gray-transparent);
+}
+
+.login-form__form--input:focus {
+    /* padding: 40px !important; */
+    border-color: var(--siem-principal-blue);
+    background-color: var(--siem-principal-gray-transparent);
+}
+
+.login-form__form--input-password,
+.login-form__form--input-password:focus {
+    border-right-color: transparent;
+}
+
+.login-form__form--button {
+    height: 70px;
+    font-size: 17px;
+    border-color: var(--siem-principal-blue);
+    background-color: var(--siem-principal-blue);
+}
+
+.login-form__form--button:hover {
+    border-color: var(--siem-secondary-green);
+    background-color: var(--siem-secondary-green);
+}
+
+.login-form__form--button:disabled {
+    border-color: var(--siem-principal-light-blue);
+    background-color: var(--siem-principal-light-blue);
+}
+
+.login-form__form--password-button {
+    border-color: var(--siem-principal-blue);
+
+    background-color: var(--siem-principal-gray-transparent);
+    border-left-color: transparent;
+}
+
+.login-form__error-message-block {
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    padding: 30px 20px 30px 20px;
+
+    justify-content: center;
+    gap: 15px;
+    font-size: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    align-items: center;
+    /* align-items: stretch; */
+}
+
+.login-form__error-message-block--icon {
+    color: var(--siem-secondary-red);
+}
+
+.login-form__error-message-block > p {
+    margin: auto !important;
+}
+
+input:-webkit-autofill {
+    /* background-color: white !important; */
+    background-color: var(--siem-principal-gray-transparent) !important;
+
+    color: black !important;
+    box-shadow: 0 0 0px 1000px var(--siem-principal-gray-transparent) inset !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    /* background-color: white !important; */
+    background-color: var(--siem-principal-gray-transparent) !important;
+
+    color: black !important;
+    box-shadow: 0 0 0px 1000px var(--siem-principal-gray-transparent) inset !important;
+}
+
+.floating-label-wrapper > label {
+    color: var(--color-smx-gray) !important;
+}
+
+.floating-label-wrapper > label::after {
+    background-color: transparent !important;
+}

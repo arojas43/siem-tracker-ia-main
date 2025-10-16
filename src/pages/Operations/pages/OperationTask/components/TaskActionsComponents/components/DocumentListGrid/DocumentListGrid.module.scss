@@ -1,0 +1,32 @@
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.documentItem {
+  margin: 0;
+  font-size: 14px;
+}
+
+.showMoreContainer {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.showMoreLine {
+  flex: 1;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 0;
+}
+
+.showMoreText {
+  margin: 0 16px;
+  cursor: pointer;
+  color: #007bff;
+  font-weight: 500;
+  user-select: none;
+}

@@ -1,0 +1,71 @@
+@use '../../../../mixins' as mixins;
+
+.app-header {
+    padding: 25px 20px;
+    /* margin-top: 18px; */
+    background-color: transparent;
+    color: var(--siem-principal-light-blue);
+    border-bottom: 1px solid var(--siem-principal-gray);
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    z-index: 3;
+    width: 100%;
+    top: 0px;
+    background: #FFF;
+
+    .app-header_menu-icon,
+    .app-header_logo {
+        display: none;
+    }
+
+    @include mixins.breakpoint(sm) {
+        .app-header_title {
+            display: none;
+        }
+
+        .app-header_menu-icon,
+        .app-header_logo {
+            display: initial;
+
+            img {
+                width: 100px;
+            }
+        }
+    }
+}
+
+.app-header__action-btns {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 5px;
+    padding-right: 10px;
+
+    // @include mixins.breakpoint(sm) {
+    //     img {
+    //         display: none;
+    //     }
+    // }
+}
+
+.app-header__notification-btn {
+    padding: 5px;
+    background-color: rgb(244, 246, 249);
+    border-radius: 50%;
+    color: rgb(25, 81, 104);
+}
+
+.app-header__notification-btn__alerted {
+    padding: 5px;
+    background-color: rgb(244, 246, 249);
+    border-radius: 50%;
+    color: rgb(253, 81, 104);
+}
+
+/* todo add this css when logic is added */
+.app-header__notification-btn:hover {
+    /* border-radius: 40%; */
+    color: rgb(253, 81, 104);
+    /* background-color: rgb(244, 246, 249); */
+}
