@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { DeepChat } from 'deep-chat-react';
 import { useAppSelector } from '@hooks/reduxTyped.hooks';
 import classes from './DeepChatWidget.module.scss';
@@ -9,6 +9,8 @@ interface DeepChatWidgetProps {
 
 const DeepChatWidget: React.FC<DeepChatWidgetProps> = ({ onClose }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const chatRef = useRef<any>(null);
   const accessToken = useAppSelector((state) => state.auth.accessToken);
   const userInfo = useAppSelector((state) => state.userInfo);
 
@@ -53,6 +55,22 @@ const DeepChatWidget: React.FC<DeepChatWidgetProps> = ({ onClose }) => {
     );
   }
 
+  // Inicializar interceptores de DeepChat cuando el componente está abierto
+  useEffect(() => {
+    if (!isOpen) return;
+    const el = chatRef.current as any;
+    if (el) {
+      el.requestInterceptor = (req: any) => {
+        setIsLoading(true);
+        return req;
+      };
+      el.responseInterceptor = (res: any) => {
+        setIsLoading(false);
+        return res;
+      };
+    }
+  }, [isOpen]);
+
   return (
     <div className={classes['deep-chat-container']}>
       <div className={classes['deep-chat-header']}>
@@ -77,6 +95,7 @@ const DeepChatWidget: React.FC<DeepChatWidgetProps> = ({ onClose }) => {
       
       <div className={classes['deep-chat-content']}>
         <DeepChat
+          ref={chatRef}
           connect={{
             url: `${chatbotBase}/api/chatbot/deepchat`,
             method: 'POST',
@@ -89,9 +108,13 @@ const DeepChatWidget: React.FC<DeepChatWidgetProps> = ({ onClose }) => {
               context: {
                 user_type: resolvedUserType,
                 current_page: window.location.pathname,
+                // Force LM Studio usage for this widget (bypass aggregator)
+                force_llm: true,
               }
             }
           }}
+          requestInterceptor={(req: any) => { setIsLoading(true); return req; }}
+          responseInterceptor={(res: any) => { setIsLoading(false); return res; }}
           textInput={{
             placeholder: {
               text: 'Escribe tu consulta sobre comercio exterior...'
@@ -107,6 +130,11 @@ const DeepChatWidget: React.FC<DeepChatWidgetProps> = ({ onClose }) => {
             width: '100%'
           }}
         />
+        <div className={classes['loading-overlay']} style={{ opacity: isLoading ? 1 : 0 }} aria-hidden={!isLoading}>
+          <span className={classes['typing-dot']}></span>
+          <span className={classes['typing-dot']}></span>
+          <span className={classes['typing-dot']}></span>
+        </div>
       </div>
     </div>
   );

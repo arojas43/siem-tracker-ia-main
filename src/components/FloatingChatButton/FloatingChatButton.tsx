@@ -1,112 +1,115 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { DeepChat } from 'deep-chat-react';
-import { useAppSelector } from '@hooks/reduxTyped.hooks';
-import classes from './FloatingChatButton.module.scss';
+import styles from './FloatingChatButton.module.scss';
 
 interface FloatingChatButtonProps {
   className?: string;
+  jwtToken?: string;
 }
 
-const FloatingChatButton: React.FC<FloatingChatButtonProps> = ({ className }) => {
+const FloatingChatButton: React.FC<FloatingChatButtonProps> = ({ className, jwtToken }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const accessToken = useAppSelector((state) => state.auth.accessToken);
-  const userInfo = useAppSelector((state) => state.userInfo);
+  const [isLoading, setIsLoading] = useState(false);
+  const chatRef = useRef<any>(null);
 
-  const chatbotBase = (
-    (import.meta.env.VITE_CHATBOT_ENDPOINT as string | undefined) || ''
-  )
-    .toString()
-    .replace(/\/$/, '') ||
-    ((import.meta.env.VITE_API_ENDPOINT as string | undefined) || '')
-      .toString()
-      .replace(/\/api\/?$/, '');
+  const chatbotBase = useMemo(() => {
+    const envBase =
+      ((import.meta.env.VITE_CHATBOT_ENDPOINT as string | undefined) || '')
+        .toString()
+        .replace(/\/$/, '') ||
+      ((import.meta.env.VITE_API_ENDPOINT as string | undefined) || '')
+        .toString()
+        .replace(/\/api\/?$/, '');
+    return envBase;
+  }, []);
 
-  const authHeader = accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
-  const resolvedUserId =
-    (userInfo?.email && userInfo.email.trim()) ||
-    (userInfo?.username && userInfo.username.trim()) ||
-    (userInfo?.id ? String(userInfo.id) : 'unknown');
-  const resolvedUserType = userInfo?.userType === 'external' ? 'client' : 'siem';
+  const authHeader = useMemo(() => {
+    if (!jwtToken) return undefined;
+    return { Authorization: `Bearer ${jwtToken}` };
+  }, [jwtToken]);
 
-  const handleOpen = () => {
-    setIsOpen(true);
-  };
+  useEffect(() => {
+    const chatEl = chatRef.current;
+    if (!chatEl) return;
 
-  const handleClose = () => {
-    setIsOpen(false);
-  };
+    chatEl.requestInterceptor = (message: any) => {
+      setIsLoading(true);
+      return message;
+    };
+    chatEl.responseInterceptor = () => {
+      setIsLoading(false);
+    };
 
-  if (!isOpen) {
-    return (
-      <div className={`${classes['floating-chat-trigger']} ${className || ''}`}>
-        <button 
-          onClick={handleOpen}
-          className={classes['trigger-button']}
-          title="Asistente IA - Comercio Exterior"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.11 3.89 23 5 23H19C20.11 23 21 22.11 21 21V9M19 9H14V4L19 9Z" fill="currentColor"/>
-          </svg>
-        </button>
-      </div>
-    );
-  }
+    return () => {
+      if (!chatEl) return;
+      chatEl.requestInterceptor = undefined;
+      chatEl.responseInterceptor = undefined;
+    };
+  }, [chatRef]);
 
   return (
-    <div className={`${classes['floating-chat-container']} ${className || ''}`}>
-      <div className={classes['chat-header']}>
-        <div className={classes['header-content']}>
-          <div className={classes['header-icon']}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.11 3.89 23 5 23H19C20.11 23 21 22.11 21 21V9M19 9H14V4L19 9Z" fill="currentColor"/>
-            </svg>
-          </div>
-          <h3>Asistente de Comercio Exterior</h3>
-        </div>
-        <button 
-          onClick={handleClose}
-          className={classes['close-button']}
-          title="Cerrar"
+    <div className={`${styles['floating-chat-trigger']} ${className || ''}`}> 
+      {!isOpen && (
+        <button
+          className={styles['trigger-button']}
+          onClick={() => setIsOpen(true)}
+          aria-label="Abrir chat"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="currentColor"/>
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 3C6.486 3 2 6.589 2 11c0 2.389 1.324 4.534 3.414 6.03L4 21l4.22-1.689C9.451 19.77 10.708 20 12 20c5.514 0 10-3.589 10-8s-4.486-9-10-9zM8 11h8v2H8v-2zm0-4h8v2H8V7z" />
           </svg>
         </button>
-      </div>
-      
-      <div className={classes['chat-content']}>
-        <DeepChat
-          connect={{
-            url: `${chatbotBase}/api/chatbot/deepchat`,
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              ...authHeader,
-            },
-            additionalBodyProps: {
-              user_id: resolvedUserId,
-              context: {
-                user_type: resolvedUserType,
-                current_page: window.location.pathname,
-              }
-            }
-          }}
-          textInput={{
-            placeholder: {
-              text: 'Escribe tu consulta sobre comercio exterior...'
-            }
-          }}
-          introMessage={{
-            text: '¡Hola! Soy tu asistente especializado en comercio exterior y aduanas. Puedo ayudarte con:\n\n• Consultas sobre operaciones de importación/exportación\n• Información sobre clientes, proveedores y aduanas\n• Estado de tareas y procesos logísticos\n• Regulaciones aduaneras y documentación\n• Análisis de datos de operaciones\n\n¿En qué puedo ayudarte hoy?'
-          }}
-          style={{
-            borderRadius: '12px',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
-            height: '100%',
-            width: '100%'
-          }}
-        />
-      </div>
+      )}
+
+      {isOpen && (
+        <div className={`${styles['floating-chat-container']} ${className || ''}`}>
+          <div className={styles['chat-header']}>
+            <div className={styles['header-content']}>
+              <div className={styles['header-icon']}>
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 2C6.477 2 2 6.029 2 10.5c0 2.295 1.14 4.372 2.975 5.853L4 22l5.115-2.279C10.223 20.056 11.093 20.2 12 20.2c5.523 0 10-4.029 10-9.7S17.523 2 12 2z" />
+                </svg>
+              </div>
+              <h3>Asistente de Comercio Exterior</h3>
+            </div>
+            <button className={styles['close-button']} onClick={() => setIsOpen(false)} aria-label="Cerrar">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M18.3 5.71L12 12.01 5.7 5.71 4.29 7.12l6.3 6.3-6.3 6.29 1.41 1.41 6.3-6.29 6.29 6.29 1.41-1.41-6.29-6.29 6.29-6.3z" />
+              </svg>
+            </button>
+          </div>
+
+          <div className={styles['chat-content']}>
+            <DeepChat
+              ref={chatRef}
+              connect={{
+                url: `${chatbotBase}/api/chatbot/deepchat`,
+                method: 'POST',
+                headers: authHeader,
+                additionalBodyProps: {
+                  jwt: jwtToken ?? '',
+                  context: {
+                    current_page: window.location.pathname,
+                    force_llm: true,
+                  }
+                }
+              }}
+              textInput={{
+                placeholder: { text: 'Escribe tu consulta sobre comercio exterior...' }
+              }}
+              introMessage={{
+                text: '¡Hola! Soy tu asistente especializado en comercio exterior y aduanas. Puedo ayudarte con:\n\n• Consultas sobre importación/exportación\n• Información de clientes, proveedores y aduanas\n• Estado de tareas y procesos logísticos\n• Regulaciones aduaneras y documenta...'
+              }}
+              style={{ height: '100%', width: '100%' }}
+            />
+            <div className={styles['loading-overlay']} style={{ opacity: isLoading ? 1 : 0 }}>
+              <span className={styles['typing-dot']} />
+              <span className={styles['typing-dot']} />
+              <span className={styles['typing-dot']} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

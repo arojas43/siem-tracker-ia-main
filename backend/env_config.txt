@@ -13,8 +13,8 @@ SIEM_API_BASE_URL=http://localhost:8000
 SIEM_API_TOKEN=siem-chatbot-token-2024
 
 # LM Studio (servidor local)
-LM_STUDIO_URL=http://localhost:1234
-LM_STUDIO_MODEL=openai/gpt-oss-20b
+LM_STUDIO_URL=http://172.18.240.1:1234
+LM_STUDIO_MODEL=phi-3.5-mini-instruct
 
 # Configuración de logging
 LOG_LEVEL=INFO

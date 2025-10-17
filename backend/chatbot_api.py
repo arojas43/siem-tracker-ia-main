@@ -27,6 +27,278 @@ security = HTTPBearer()
 # Bearer opcional para endpoints donde el token podría faltar (no romper)
 security_optional = HTTPBearer(auto_error=False)
 
+def _to_plain_short(text: str, max_chars: int = 220) -> str:
+    # Respuesta corta y plana en español, sin markdown ni tablas.
+    if not isinstance(text, str):
+        try:
+            text = json.dumps(text, ensure_ascii=False)
+        except Exception:
+            text = str(text)
+    # Quitar HTML/Markdown y símbolos
+    text = re.sub(r'<[^>]+>', ' ', text)
+    text = re.sub(r'```.+?```', ' ', text, flags=re.DOTALL)
+    text = re.sub(r'`([^`]+)`', r'\1', text)
+    text = re.sub(r'^\s*[-*•]\s*', '', text, flags=re.MULTILINE)
+    text = re.sub(r'\|.+\|', ' ', text)
+    text = re.sub(r'\s+', ' ', text).strip()
+    # Phrasing
+    text = re.sub(r'\bEn resumen:?\s*', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'\bConclusión:?\s*', '', text, flags=re.IGNORECASE)
+    # Limitar longitud
+    if len(text) > max_chars:
+        text = text[:max_chars].rstrip()
+        m = re.search(r'^(.*?)([\.!?;,])[^\.!?;,]*$', text)
+        if m:
+            text = m.group(1).strip() + m.group(2)
+    return text or "Aún no cuenta con esa información"
+
+# Compactador amigable: elimina encabezados/descargos técnicos y acorta con buen corte.
+# Úsalo antes de devolver texto al widget para evitar 'Informe...' y detalles de sistema/BD.
+def _friendly_compact(text: str, max_chars: int = 600) -> str:
+    if not isinstance(text, str):
+        try:
+            text = json.dumps(text, ensure_ascii=False)
+        except Exception:
+            text = str(text)
+    # Eliminar encabezados/plantillas típicas
+    patterns = [
+        r"Informe\s+de\s+An[aá]lisis[^\n]*",
+        r"Limitaciones[^\n]*",
+        r"A\s+continuaci[oó]n[^\n]*",
+        r"Este\s+an[aá]lisis[^\n]*",
+        r"Con\s+base\s+en\s+los\s+datos[^\n]*",
+        r"Se\s+presenta[^\n]*",
+    ]
+    for p in patterns:
+        text = re.sub(p, " ", text, flags=re.IGNORECASE)
+    # Quitar símbolos/markdown y compactar espacios
+    text = re.sub(r'<[^>]+>', ' ', text)
+    text = re.sub(r'```.+?```', ' ', text, flags=re.DOTALL)
+    text = re.sub(r'`([^`]+)`', r'\1', text)
+    text = re.sub(r'^\s*[-*•]\s*', '', text, flags=re.MULTILINE)
+    text = re.sub(r'\|.+\|', ' ', text)
+    text = re.sub(r'\s+', ' ', text).strip()
+    # Limitar longitud con corte natural
+    if len(text) > max_chars:
+        text = text[:max_chars].rstrip()
+        m = re.search(r'^(.*?)([\.!?;,])[^\.!?;,]*$', text)
+        if m:
+            text = m.group(1).strip() + m.group(2)
+    # Evitar textos vacíos
+    return text or "Aún no cuenta con esa información"
+
+
+def _guess_operation_code(q: str) -> Optional[str]:
+    """Extrae un posible código de operación del texto del usuario.
+
+    Soporta variantes con espacios alrededor del guion: "SOD25 - 063" y normaliza a "SOD25-063".
+    """
+    if not q:
+        return None
+    # Variante con espacios alrededor del guion
+    m = re.search(r"\b([A-Za-z]{3}\s*\d{2,}\s*-\s*\d{2,})\b", q, flags=re.IGNORECASE)
+    if not m:
+        # Variante compacta típica
+        m = re.search(r"\b([A-Za-z]{3}\d{2,}-\d{2,})\b", q, flags=re.IGNORECASE)
+    if m:
+        code = m.group(1)
+        code = re.sub(r"\s*-\s*", "-", code)
+        code = re.sub(r"\s+", "", code)
+        return code.upper()
+    return None
+
+
+def _aggregate_frontend_endpoints(
+    query_text: str,
+    token: Optional[str],
+    user_type: str,
+    base_url: str,
+    current_page: Optional[str] = None
+) -> Optional[str]:
+    """
+    Consulta múltiples endpoints usados por el frontend con el JWT del usuario
+    y devuelve un resumen corto y plano. Si no hay datos relevantes, retorna None.
+    """
+    if not token or not base_url:
+        return None
+
+    headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
+    op_code = _guess_operation_code(query_text or "")
+    endpoints = [
+        {"path": "/summary/home/client/" if user_type == "client" else "/summary/home/", "key": "home"},
+        {"path": "/summary/operations/client/" if user_type == "client" else "/summary/operations/", "key": "ops_summary"},
+        {"path": "/operations/", "key": "operations", "params": {"search": op_code} if op_code else {}},
+        {"path": "/assignments/", "key": "assignments"},
+        {"path": "/documents/", "key": "documents", "params": {"operation_code": op_code} if op_code else {}},
+        {"path": "/tasks/", "key": "tasks"},
+        {"path": "/clients/", "key": "clients"} if user_type != "client" else None,
+        {"path": "/users/", "key": "users"},
+        {"path": "/goods_suppliers/", "key": "suppliers"},
+        {"path": "/customs/", "key": "customs"},
+        {"path": "/containers/", "key": "containers"},
+        {"path": "/merchandise_types/", "key": "merch_types"},
+        {"path": "/countries/", "key": "countries"},
+        {"path": "/languages/", "key": "languages"},
+    ]
+    # Extensiones según página actual y contexto
+    page_hint = (current_page or "").lower()
+    if op_code:
+        # Archivos de operación (documentos/imágenes) cuando hay código de operación
+        endpoints.append({"path": "/download_operation_files/", "key": "operation_files", "params": {"file_type": "all", "operation_code": op_code}})
+        # Fases por operación (cliente vs siem)
+        phases_path = "/phases-by-operation-code/client/" if user_type == "client" else "/phases-by-operation-code/"
+        endpoints.append({"path": phases_path, "key": "phases", "params": {"operation_code": op_code}})
+    # Directorio/usuarios agrupados si la página lo sugiere
+    if "directory" in page_hint:
+        endpoints.append({"path": "/group_users/", "key": "group_users"})
+    endpoints = [e for e in endpoints if e]
+
+    def _safe_get(url: str, params: Optional[Dict[str, Any]] = None):
+        try:
+            resp = requests.get(url, headers=headers, params=params or {}, timeout=18)
+            if resp.status_code == 200:
+                try:
+                    return resp.json()
+                except Exception:
+                    return {"text": resp.text}
+            return None
+        except Exception:
+            return None
+
+    base = base_url.rstrip('/')
+    if not base.endswith('/api'):
+        base = f"{base}/api"
+
+    collected: Dict[str, Any] = {}
+    for ep in endpoints:
+        url = f"{base}{ep['path']}"
+        data = _safe_get(url, ep.get("params"))
+        if data:
+            collected[ep['key']] = data
+
+    if not collected:
+        return None
+
+    parts: List[str] = []
+    home = collected.get("home")
+    if isinstance(home, dict):
+        ops_sum = home.get("operations_summary")
+        if isinstance(ops_sum, dict):
+            created = ops_sum.get("created")
+            finished = ops_sum.get("finished")
+            active = ops_sum.get("active") or ops_sum.get("in_progress")
+            if any(v is not None for v in [active, created, finished]):
+                parts.append(
+                    f"Operaciones activas {active or 0}, creadas {created or 0}, finalizadas {finished or 0}."
+                )
+        pending_tasks = home.get("pending_tasks")
+        if isinstance(pending_tasks, list):
+            parts.append(f"Tareas pendientes {len(pending_tasks)}.")
+
+    ops_summary = collected.get("ops_summary")
+    if isinstance(ops_summary, dict):
+        total_ops = ops_summary.get("total_operations")
+        total_ped = ops_summary.get("total_payment_pediment")
+        if total_ops is not None:
+            parts.append(f"Total de operaciones {total_ops}.")
+        if total_ped is not None:
+            parts.append(f"Pagos de pedimentos {total_ped}.")
+
+    ops = collected.get("operations")
+    if isinstance(ops, dict) and isinstance(ops.get("results"), list):
+        count = ops.get("count") or len(ops.get("results"))
+        if op_code:
+            match = next((o for o in ops.get("results") if str(o.get("operation_code", "")).lower() == str(op_code).lower()), None)
+            if match:
+                status = match.get("status") or match.get("progress")
+                client_name = match.get("client_info", {}).get("client_name")
+                eta = match.get("ETA")
+                parts.append(f"{op_code}: estado {status or 'N/D'}, cliente {client_name or 'N/D'}, ETA {eta or 'N/D'}.")
+            else:
+                parts.append(f"No se encontró operación {op_code}.")
+        else:
+            parts.append(f"Operaciones listadas {count}.")
+
+    tasks = collected.get("tasks")
+    if isinstance(tasks, dict) and isinstance(tasks.get("results"), list):
+        incompleted = [t for t in tasks.get("results") if str(t.get("taskStatus", "")).lower() not in ("completed", "finished")]
+        parts.append(f"Tareas en curso {len(incompleted)}.")
+
+    assignments = collected.get("assignments")
+    if isinstance(assignments, dict) and isinstance(assignments.get("results"), list):
+        total = assignments.get("count") or len(assignments.get("results"))
+        active_count = 0
+        for a in assignments.get("results"):
+            if isinstance(a, dict):
+                val = a.get("is_active")
+                if val is True or str(val).lower() in ("true", "1"):
+                    active_count += 1
+        parts.append(f"Asignaciones listadas {total}, activas {active_count}.")
+
+    documents = collected.get("documents")
+    if isinstance(documents, dict) and isinstance(documents.get("results"), list):
+        doc_total = documents.get("count") or len(documents.get("results"))
+        parts.append(f"Documentos listados {doc_total}.")
+
+    # Archivos por operación (si hay código)
+    operation_files = collected.get("operation_files")
+    if isinstance(operation_files, dict):
+        urls = operation_files.get("urls") or []
+        if isinstance(urls, list):
+            parts.append(f"Archivos de operación {len(urls)}.")
+        elif operation_files.get("count") is not None:
+            parts.append(f"Archivos de operación {operation_files.get('count')}.")
+
+    # Fases por código de operación
+    phases = collected.get("phases")
+    if isinstance(phases, dict):
+        results = phases.get("results") or phases.get("phases") or phases.get("data")
+        if isinstance(results, list):
+            parts.append(f"Fases listadas {len(results)}.")
+
+    # Usuarios agrupados (directorio)
+    group_users = collected.get("group_users")
+    if isinstance(group_users, dict):
+        detail = group_users.get("detail")
+        if isinstance(detail, dict):
+            parts.append(f"Grupos de usuarios {len(detail.keys())}.")
+        elif isinstance(group_users.get("results"), list):
+            parts.append(f"Usuarios agrupados {len(group_users.get('results'))}.")
+
+    clients = collected.get("clients")
+    if isinstance(clients, dict) and isinstance(clients.get("results"), list):
+        parts.append(f"Clientes activos {len(clients.get('results'))}.")
+
+    users = collected.get("users")
+    if isinstance(users, dict) and isinstance(users.get("results"), list):
+        parts.append(f"Usuarios {len(users.get('results'))}.")
+
+    customs = collected.get("customs")
+    if isinstance(customs, dict) and isinstance(customs.get("results"), list):
+        parts.append(f"Aduanas {len(customs.get('results'))}.")
+
+    suppliers = collected.get("suppliers")
+    if isinstance(suppliers, dict) and isinstance(suppliers.get("results"), list):
+        parts.append(f"Proveedores {len(suppliers.get('results'))}.")
+
+    containers = collected.get("containers")
+    if isinstance(containers, dict) and isinstance(containers.get("results"), list):
+        parts.append(f"Contenedores {len(containers.get('results'))}.")
+
+    merch = collected.get("merch_types")
+    if isinstance(merch, dict) and isinstance(merch.get("results"), list):
+        parts.append(f"Tipos de mercancía {len(merch.get('results'))}.")
+
+    countries = collected.get("countries")
+    languages = collected.get("languages")
+    if isinstance(countries, dict) and isinstance(countries.get("results"), list):
+        parts.append(f"Países {len(countries.get('results'))}.")
+    if isinstance(languages, dict) and isinstance(languages.get("results"), list):
+        parts.append(f"Idiomas {len(languages.get('results'))}.")
+
+    summary = " ".join(parts)
+    return summary.strip() if summary.strip() else None
+
 
 def decode_jwt_token(token: str) -> Dict[str, Any]:
     """Decodifica y valida un JWT usando SECRET_KEY y ALGORITHM.
@@ -351,8 +623,11 @@ def _score_endpoint(user_query: str, ep: Dict[str, Any], page_hint: Optional[str
             for eq in synonyms[t]:
                 expanded_tokens.add(eq)
 
-    # Normalizar campos del endpoint
-    fields = [ep.get("name", ""), ep.get("path", "")]
+    # Detectar código de operación en la consulta
+    op_code = _guess_operation_code(user_query or "")
+
+    # Normalizar campos del endpoint (incluir descripción para mejores señales)
+    fields = [ep.get("name", ""), ep.get("path", ""), ep.get("description", "")]
     fields_norm = [f.lower() for f in fields if f]
 
     # Matching por ocurrencias
@@ -369,6 +644,15 @@ def _score_endpoint(user_query: str, ep: Dict[str, Any], page_hint: Optional[str
         if kl in expanded_tokens:
             score += 0.5
 
+    # Refuerzo si la consulta contiene un código de operación y el endpoint lo soporta
+    if op_code:
+        params_keys = [k.lower() for k in (ep.get("query_params", []) + ep.get("path_params", []))]
+        if any(k in params_keys for k in ["operation", "operation_code", "operationid", "operation_id", "code", "op"]):
+            score += 2.0
+        # Endpoints relacionados con fases/documentos también son relevantes cuando hay código
+        if any(("phase" in s) or ("document" in s) or ("file" in s) for s in fields_norm):
+            score += 0.6
+
     # Boost por dominios (por si los campos son ambiguos)
     dom_boosts = [
         ("task", 1.2), ("operation", 1.0), ("phase", 0.8),
@@ -380,17 +664,24 @@ def _score_endpoint(user_query: str, ep: Dict[str, Any], page_hint: Optional[str
         if any(dom in s for s in fields_norm) and dom in expanded_tokens:
             score += inc
 
+    # Penalizar endpoints de sistema/BD/metricas para evitar respuestas técnicas
+    penalty_terms = [
+        "system", "sistema", "database", "db", "kpi", "metric", "metrics",
+        "log", "logs", "auditoria", "audit", "reporte", "report"
+    ]
+    if any(any(term in s for term in penalty_terms) for s in fields_norm):
+        score -= 1.5
+
     # Boost por hint de página del frontend
     if page_hint:
         ph = page_hint.lower()
-        if "operation" in fields_norm[0] if fields_norm else False:
-            pass  # guard against index
         page_map = {
-            "/operations": ["operation", "phase", "task"],
+            "/operations": ["operation", "phase", "task", "document"],
             "/clients": ["client", "operation"],
             "/suppliers": ["supplier"],
             "/customs": ["customs"],
             "/tasks": ["task"],
+            "/documents": ["document"]
         }
         for key, kws in page_map.items():
             if key in ph:
@@ -414,7 +705,7 @@ def _get_llm() -> ChatOpenAI:
     global _LLM_INSTANCE
     if _LLM_INSTANCE is None:
         lm_studio_url = os.getenv('LM_STUDIO_URL', 'http://localhost:1234')
-        lm_studio_model = os.getenv('LM_STUDIO_MODEL', 'openai/gpt-oss-20b')
+        lm_studio_model = os.getenv('LM_STUDIO_MODEL', 'phi-3.5-mini-instruct')
         _LLM_INSTANCE = ChatOpenAI(
             model=lm_studio_model,
             temperature=0.0,
@@ -444,6 +735,9 @@ def _plan_with_llm(user_query: str, candidates: List[Dict[str, Any]], user_param
         " candidatos. Elige el endpoint más adecuado y extrae parámetros del texto."
         " Responde SOLO en JSON con las claves: endpoint_index (int), params (obj), missing_params (array de strings)."
         " Si faltan parámetros obligatorios de ruta o query, inclúyelos en missing_params."
+        " Evita endpoints técnicos del sistema (KPIs, métricas, logs, auditoría)."
+        " Si el usuario menciona un código de operación, prioriza endpoints que acepten 'operation_code'/'operation_id'"
+        " y los relacionados con fases, tareas y documentos de esa operación."
     )
     user = (
         f"Consulta: {user_query}\n"
@@ -680,11 +974,66 @@ def _summarize_plain_text(user_query: str, endpoint: Dict[str, Any], result: Any
             return f"{detail_line} {header} {tops_text}".strip()
         return f"{header} {tops_text}".strip()
 
-    # 1) Intento de resumen determinista para operaciones
+    # 1) Intento determinista por dominio
     try:
+        # Operaciones
         ops = _ops_summary()
         if ops:
             return ops
+
+        # Asignaciones
+        name = (endpoint.get("name") or "").lower()
+        path = (endpoint.get("path") or "").lower()
+        if any(k in name or k in path for k in ("assignment", "/assignments", "asignacion", "asignación", "asignaciones")):
+            items, total = _extract_items(result)
+            if total == 0:
+                return "No encontré asignaciones para esta consulta."
+            active = 0
+            for it in items:
+                if isinstance(it, dict):
+                    val = it.get("is_active")
+                    if val is True or str(val).lower() in ("true", "1"):
+                        active += 1
+            inactive = total - active
+            phases = {}
+            for it in items:
+                if isinstance(it, dict):
+                    ph = _first(it, ["phase", "fase"])
+                    if ph is not None and str(ph).strip() != "":
+                        key = str(ph).strip()
+                        phases[key] = phases.get(key, 0) + 1
+            phase_str = ""
+            if phases:
+                top = sorted(phases.items(), key=lambda x: x[1], reverse=True)[:3]
+                phase_str = " | por fase: " + ", ".join(f"{p}:{c}" for p, c in top)
+            return f"Asignaciones listadas {total}, activas {active}, inactivas {inactive}{phase_str}."
+
+        # Documentos
+        if any(k in name or k in path for k in ("document", "/documents", "documento", "documentos")):
+            items, total = _extract_items(result)
+            if total == 0:
+                return "No encontré documentos para esta consulta."
+            by_type = {}
+            by_status = {}
+            for it in items:
+                if isinstance(it, dict):
+                    t = _first(it, ["type", "tipo", "document_type"]) or "sin_tipo"
+                    s = _first(it, ["status", "estado"]) or "sin_estado"
+                    t = str(t).strip() or "sin_tipo"
+                    s = str(s).strip() or "sin_estado"
+                    by_type[t] = by_type.get(t, 0) + 1
+                    by_status[s] = by_status.get(s, 0) + 1
+            top_types = sorted(by_type.items(), key=lambda x: x[1], reverse=True)[:3]
+            top_status = sorted(by_status.items(), key=lambda x: x[1], reverse=True)[:3]
+            t_str = ", ".join(f"{t}:{c}" for t, c in top_types) if top_types else ""
+            s_str = ", ".join(f"{t}:{c}" for t, c in top_status) if top_status else ""
+            det = []
+            if t_str:
+                det.append(f"por tipo: {t_str}")
+            if s_str:
+                det.append(f"por estado: {s_str}")
+            detail = (" | " + " ".join(det)) if det else ""
+            return f"Documentos listados {total}{detail}."
     except Exception:
         # Si algo falla, seguimos al resumen genérico
         pass
@@ -716,7 +1065,7 @@ def _summarize_plain_text(user_query: str, endpoint: Dict[str, Any], result: Any
             {"role": "user", "content": user}
         ])
         content = msg.content if hasattr(msg, "content") else str(msg)
-        return content.replace("|", " ")
+        return _friendly_compact(content, max_chars=600)
     except Exception:
         try:
             return f"Resultado consultado correctamente. Datos: {json.dumps(result, ensure_ascii=False)[:1000]}"
@@ -815,10 +1164,15 @@ def _normalize_params(
     # Extraer patrones comunes de la consulta del usuario
     if user_query:
         uq = user_query.strip()
-        # Código de operación tipo ABC12-345 o similar
-        m = re.search(r"\b[A-Z]{2,}[0-9]{2,}-[0-9]{2,}\b", uq)
+        # Código de operación tipo ABC12-345 o similar (soportar espacios alrededor del guion)
+        m = re.search(r"\b([A-Za-z]{3}\s*\d{2,}\s*-\s*\d{2,})\b", uq)
+        if not m:
+            m = re.search(r"\b([A-Za-z]{3}\d{2,}-\d{2,})\b", uq)
         if m and "operation" not in canonical:
-            canonical["operation"] = m.group(0)
+            code = m.group(1)
+            code = re.sub(r"\s*-\s*", "-", code)
+            code = re.sub(r"\s+", "", code)
+            canonical["operation"] = code.upper()
         # ID alfanumérico largo (fallback genérico)
         if "id" not in canonical:
             m2 = re.search(r"\bid\s*[:#]?\s*([A-Za-z0-9\-]{6,})\b", uq, flags=re.IGNORECASE)
@@ -1055,9 +1409,10 @@ async def ask_and_summarize(
 
     # 4) Resumen en texto plano
     answer = _summarize_plain_text(user_query, chosen, result)
+    compact = _friendly_compact(answer, max_chars=600)
 
     return {
-        "answer": answer,
+        "answer": compact,
         "called": True,
         "status_code": resp.status_code,
         "decided_endpoint": {
@@ -1109,7 +1464,8 @@ async def get_current_user_optional(credentials: Optional[HTTPAuthorizationCrede
 async def chat_with_agent(
     request: ChatRequest,
     background_tasks: BackgroundTasks,
-    current_user: Dict[str, Any] = Depends(get_current_user_optional)
+    current_user: Dict[str, Any] = Depends(get_current_user_optional),
+    credentials: HTTPAuthorizationCredentials = Depends(security)
 ):
     """
     Endpoint principal para chat con el agente de comercio exterior mejorado
@@ -1117,6 +1473,28 @@ async def chat_with_agent(
     try:
         # Obtener agente mejorado
         agent = get_enhanced_chatbot_agent()
+
+        # Inyectar sesión autenticada con JWT en el data_retriever para consultas por usuario
+        try:
+            token = credentials.credentials
+            sess = requests.Session()
+            sess.headers.update({
+                "Authorization": f"Bearer {token}",
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            })
+            # Forzar uso de esta sesión durante la vida de la petición
+            agent.data_retriever._auth_session = sess
+            agent.data_retriever._token_expiry = datetime.max
+            # Mantener headers coherentes
+            agent.data_retriever.headers = {
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json"
+            }
+        except Exception:
+            # Si por alguna razón no se puede inyectar, el agente seguirá intentando
+            # pero no cumplirá el requisito de filtrado por usuario
+            pass
         
         # Crear contexto del usuario mejorado
         # Preferir user_type del JWT salvo que el cliente lo defina explícitamente en el contexto
@@ -1153,9 +1531,10 @@ async def chat_with_agent(
         
         # Procesar con el agente
         response = await agent.process_chat(messages, user_context)
+        compact_resp = _friendly_compact(response.response, max_chars=600)
         
         # Agregar respuesta del agente al historial
-        assistant_message = ChatMessage(role="assistant", content=response.response)
+        assistant_message = ChatMessage(role="assistant", content=compact_resp)
         conversation_storage[session_id].append(assistant_message)
         
         # Log de la conversación
@@ -1163,12 +1542,12 @@ async def chat_with_agent(
             log_conversation,
             session_id,
             request.message,
-            response.response,
+            compact_resp,
             user_context
         )
         
         return ChatResponseModel(
-            response=response.response,
+            response=compact_resp,
             structured_data=response.structured_data,
             confidence=response.confidence,
             sources=response.sources,
@@ -1434,109 +1813,102 @@ async def deepchat_endpoint(
     Endpoint específico para Deep Chat que maneja el formato {messages: MessageContent[]}
     """
     try:
-        # Obtener agente mejorado
         agent = get_enhanced_chatbot_agent()
-        
-        # Extraer el último mensaje del usuario
         if not request.messages:
             return {"text": "No se recibió ningún mensaje"}
-        
         last_message = request.messages[-1]
         if last_message.role != "user":
             return {"text": "El último mensaje debe ser del usuario"}
 
-        
-        # Crear contexto del usuario
         resolved_user_type = (
             request.context.get("user_type")
             if request.context and request.context.get("user_type")
             else current_user.get("user_type", "client")
         )
-
         user_context = EnhancedUserContext(
-            user_id=request.user_id or current_user["id"],
+            user_id=request.user_id or current_user.get("id", ""),
             user_type=resolved_user_type,
             current_page=request.context.get("current_page", "/") if request.context else "/",
-            session_id=f"deepchat_{current_user['id']}_{int(datetime.now().timestamp())}",
+            session_id=f"deepchat_{current_user.get('id', 'anon')}_{int(datetime.now().timestamp())}",
             preferences=request.context.get("preferences") if request.context else None,
             last_activity=datetime.now().isoformat()
         )
-        
-        # Intento 1: enrutamiento dinámico a APIs reales con resumen en texto plano
+
+        # Modo agregador (configurable): consultar múltiples endpoints con JWT y responder corto
+        token = credentials_opt.credentials if credentials_opt else None
+        agg_enabled = (os.getenv('DEEPCHAT_AGGREGATOR_ENABLED', 'true').lower() in ('true','1','yes'))
+        force_llm = (request.context.get('force_llm') if request.context else False)
+        if agg_enabled and not force_llm and token:
+            base_url = os.getenv('SIEM_API_BASE_URL') or os.getenv('VITE_API_ENDPOINT') or 'http://localhost:8000/api'
+            agg_text = _aggregate_frontend_endpoints(last_message.text, token, user_context.user_type, base_url, user_context.current_page)
+            if agg_text:
+                compact = _friendly_compact(agg_text, max_chars=600)
+                background_tasks.add_task(log_conversation, user_context.session_id, last_message.text, compact, user_context)
+                return {"text": compact}
+
+        # Si se fuerza LLM, responder directamente con LM Studio y salir
+        if force_llm:
+            messages = [{"role": msg.role, "content": msg.text} for msg in request.messages]
+            response = await agent.process_chat(messages, user_context)
+            full_text = response.response
+            compact = _friendly_compact(full_text, max_chars=600)
+            background_tasks.add_task(log_conversation, user_context.session_id, last_message.text, compact, user_context)
+            return {"text": compact}
+
+        # Intento 1: enrutamiento dinámico a APIs reales con resumen en texto plano (sólo si hay JWT)
         last_text = last_message.text
         try:
-            base_url = os.getenv('SIEM_API_BASE_URL', 'http://localhost:8000')
-            page_hint = user_context.current_page
-            candidates = _choose_candidates(last_text, top_k=5, page_hint=page_hint)
-            if candidates and credentials_opt and credentials_opt.credentials:
-                plan = _plan_with_llm(last_text, candidates, user_params=None)
-                ep_idx = plan.get("endpoint_index")
-                if ep_idx is None or not isinstance(ep_idx, int) or ep_idx < 0 or ep_idx >= len(candidates):
-                    ep_idx = 0
-                chosen = candidates[ep_idx]
-                params = _normalize_params(plan.get("params") or {}, provided=None, user_query=last_text)
-                built = _build_url(base_url, chosen, params)
-                missing = built.get("missing", [])
-                if not missing:
-                    headers = {
-                        "Authorization": f"Bearer {credentials_opt.credentials}",
-                        "Accept": "application/json"
-                    }
-                    method = chosen.get("method", "GET").upper()
-                    url = built["url"]
-                    query = built.get("query", {})
-                    try:
-                        if method == "GET":
-                            resp = requests.get(url, headers=headers, params=query, timeout=20)
-                        elif method == "POST":
-                            resp = requests.post(url, headers=headers, json=query or {}, timeout=20)
-                        elif method in ("PUT", "PATCH"):
-                            resp = requests.request(method, url, headers=headers, json=query or {}, timeout=20)
-                        elif method == "DELETE":
-                            resp = requests.delete(url, headers=headers, params=query, timeout=20)
-                        else:
-                            resp = None
-                    except Exception:
-                        resp = None
-
-                    if resp is not None:
+            if not force_llm:
+                base_url_dyn = os.getenv('SIEM_API_BASE_URL') or os.getenv('VITE_API_ENDPOINT') or 'http://localhost:8000/api'
+                page_hint = user_context.current_page
+                candidates = _choose_candidates(last_text, top_k=5, page_hint=page_hint)
+                if candidates and token:
+                    plan = _plan_with_llm(last_text, candidates, user_params=None)
+                    ep_idx = plan.get("endpoint_index")
+                    if ep_idx is None or ep_idx >= len(candidates):
+                        ep_idx = 0
+                    chosen = candidates[ep_idx]
+                    params = _normalize_params(plan.get("params") or {}, provided=None, user_query=last_text)
+                    built = _build_url(base_url_dyn, chosen, params)
+                    missing = built.get("missing", [])
+                    if not missing:
+                        headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
+                        method = chosen.get("method", "GET").upper()
+                        url = built["url"]
+                        query = built.get("query", {})
                         try:
-                            result = resp.json()
+                            if method == "GET":
+                                resp = requests.get(url, headers=headers, params=query, timeout=20)
+                            elif method == "POST":
+                                resp = requests.post(url, headers=headers, json=query or {}, timeout=20)
+                            elif method in ("PUT", "PATCH"):
+                                resp = requests.request(method, url, headers=headers, json=query or {}, timeout=20)
+                            elif method == "DELETE":
+                                resp = requests.delete(url, headers=headers, params=query, timeout=20)
+                            else:
+                                resp = None
                         except Exception:
-                            result = resp.text
-                        answer = _summarize_plain_text(last_text, chosen, result)
+                            resp = None
 
-                        # Log conversación con la respuesta derivada de API
-                        background_tasks.add_task(
-                            log_conversation,
-                            user_context.session_id,
-                            last_text,
-                            answer,
-                            user_context
-                        )
-                        return {"text": answer}
-        except Exception as _:
-            # Cualquier error en el flujo de API dinámica: caer al agente
+                        if resp is not None:
+                            try:
+                                result = resp.json()
+                            except Exception:
+                                result = resp.text
+                            answer = _summarize_plain_text(last_text, chosen, result)
+                            compact = _friendly_compact(answer, max_chars=600)
+                            background_tasks.add_task(log_conversation, user_context.session_id, last_text, compact, user_context)
+                            return {"text": compact}
+        except Exception:
             pass
 
-        # Intento 2: Agente mejorado (fallback)
+        # Intento 2: Agente mejorado (fallback) siempre en texto plano corto
         messages = [{"role": msg.role, "content": msg.text} for msg in request.messages]
         response = await agent.process_chat(messages, user_context)
-        
-        # Log de la conversación
-        background_tasks.add_task(
-            log_conversation,
-            user_context.session_id,
-            last_message.text,
-            response.response,
-            user_context
-        )
-        
-        # Responder siempre en texto plano
-        return {"text": response.response}
-        
+        full_text = response.response
+        compact = _friendly_compact(full_text, max_chars=600)
+        background_tasks.add_task(log_conversation, user_context.session_id, last_message.text, compact, user_context)
+        return {"text": compact}
     except Exception as e:
         logger.error(f"Error en deepchat endpoint: {str(e)}")
-        return {
-            "error": f"Error al procesar la consulta: {str(e)}"
-        }
+        return {"text": "Aún no cuenta con esa información"}

@@ -88,8 +88,8 @@ class EnhancedSIEMChatbotAgent:
     def _setup_llm(self) -> ChatOpenAI:
         """Configurar LLM con parámetros optimizados"""
         lm_studio_url = os.getenv('LM_STUDIO_URL', 'http://localhost:1234')
-        lm_studio_model = os.getenv('LM_STUDIO_MODEL', 'openai/gpt-oss-20b')
-        
+        lm_studio_model = os.getenv('LM_STUDIO_MODEL', 'phi-3.5-mini-instruct')
+        logger.info(f"LLM configurado: {lm_studio_model} (base: {lm_studio_url}/v1/)")
         return ChatOpenAI(
             model=lm_studio_model,
             temperature=0.7,

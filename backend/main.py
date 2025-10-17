@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from dotenv import load_dotenv
 import uvicorn
 
 from chatbot_api import router as chatbot_router
@@ -18,6 +19,8 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+load_dotenv(os.path.join(os.path.dirname(__file__), 'env_config.txt'), override=True)
+logger.info("🔧 Variables de entorno cargadas desde env_config.txt")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

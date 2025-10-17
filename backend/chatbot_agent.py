@@ -502,3 +502,4 @@ def get_chatbot_agent() -> ComercioExteriorAgent:
         _agent_instance = ComercioExteriorAgent(siem_base_url, siem_api_token)
     
     return _agent_instance
+
